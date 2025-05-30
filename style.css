@@ -1,5 +1,315 @@
-body {
-  background-color: rgb(10, 15, 15);
-  user-select: none;
-  cursor: default;
+/* Base Elements */
+body {background-color: var(--blackBg); user-select: none}
+body::-webkit-scrollbar {display: none}
+span {color: rgb(210,205,205); font-family: Book Antiqua; text-shadow: 0px 0px 10px black}
+hr {width: 100%}
+
+
+/* Variables (mostly for colors) */
+:root {
+  --blackBg: rgb(10,15,15);
+  --ttBg: rgb(50,50,50);
+  --border: rgb(127,127,127);
+  
+  --red: rgb(220,20,60);
+  --orange: rgb(255,165,0);
+  --yellow: rgb(212,175,55);
+  --yellowHover: rgb(212,175,55,0.25);
+  --green: rgb(150,200,50);
+  --darkGreen: rgb(105,140,35);
+  --blue: rgb(50,50,250);
+  --purple: rgb(150,0,210);
+  --purpleHover: rgb(150,0,210,0.25);
+  --white: rgb(255,255,255);
+  
+  --infoText: rgb(100,100,225);
+}
+
+
+/* Positioning; c=center, h=horizontally, v=vertically, t=apply to text */
+.ch {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.cv {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.chv {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.cht {
+  text-align: center;
+}
+.chvt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+}
+.scroll {overflow: scroll}
+.scroll::-webkit-scrollbar {display: none}
+
+
+/* Text */
+.redText {color: var(--red); text-shadow: 0px 0px 25px}
+.orangeText {color: var(--orange); text-shadow: 0px 0px 25px}
+.yellowText {color: var(--yellow); text-shadow: 0px 0px 25px}
+.greenText {color: var(--green); text-shadow: 0px 0px 25px}
+.blueText {color: var(--blue); text-shadow: 0px 0px 25px}
+.purpleText {color: var(--purple); text-shadow: 0px 0px 25px}
+.whiteText {color: var(--white); text-shadow: 0px 0px 25px}
+.infoText {
+  font-size: 16px;
+  color: var(--infoText);
+  cursor: pointer;
+  transition: font-size .4s;
+}
+.infoText:hover {
+  font-size: 24px;
+}
+
+
+/* UI Display & Arrangement */
+/*Elements with the 'Con' suffix are used to organize and correctly position different sectors of the UI and their respective contents*/
+.grayBorder {border: 2px solid var(--border)}
+.table {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-around;
+}
+.tableRow {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+#gameScreen {
+  display: flex;
+  flex-direction: column;
+  width: 91vw;
+  height: 91vh;
+}
+/*the top block*/
+#resourceCon {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+#tokensCon {
+  flex-grow: 9;
+  text-align: center;
+}
+#rankCon {
+  flex-grow: 2;
+  text-align: center;
+  display: none;
+}
+#energyCon {
+  flex-grow: 9;
+  text-align: center;
+}
+
+/*the middle block*/
+#centralCon {
+  display: flex;
+  flex-grow: 1;
+}
+#petConLeft {
+  height: 100%;
+  width: 242px;
+  /*width: 16vw;*/
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+#tabsCon {
+  flex-grow: 1;
+}
+#petConRight {
+  height: 100%;
+  width: 242px;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+/*the bottom block*/
+#tabButtonsCon {
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+/* Tool Tips */
+.ttc {
+  background-color: var(--ttBg);
+  border-radius: 10px;
+  padding: 5px;
+  position: absolute;
+  text-align: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .15s;
+  z-index: 1;
+}
+.ttc::after {
+  content: "";
+  position: absolute;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+}
+.ttc.t::after {
+  top: 99%;
+  left: 50%;
+  border-color: var(--ttBg) transparent transparent transparent;
+}
+.ttc.r::after {
+  top: 20%;
+  left: -7%;
+  border-color: transparent var(--ttBg) transparent transparent;
+}
+.ttc.rankupButtonTt::after {
+  top: -19px;
+  left: 50%;
+  border-color: transparent transparent var(--ttBg) transparent;
+}
+.tte:hover .ttc {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+/* Pets */
+.petSlot {
+  height: 77px;
+  width: 77px;
+  border: 2px solid var(--xborder);
+  border-radius: 10px;
+  position: relative;
+}
+
+
+/* Tab Content */
+.tabButton {
+  background-color: var(--blackBg);
+  border-radius: 25px;
+  height: 50px;
+  min-width: 170px;
+  font-size: 26px;
+  position: relative;
+  cursor: pointer;
+  transition: font-weight .2s, background-color .2s;
+  flex-grow: 1;
+}
+
+/*Achievements*/
+.achievementCell {
+  border: 2px solid var(--darkGreen);
+  border-radius: 10px;
+  width: 145px;
+  height: 145px;
+  position: relative;
+}
+.achievementDisplayId {
+  width: 100%;
+  font-size: 100px;
+  font-family: Book Antiqua;
+}
+
+/*Run*/
+#runTab {
+  display: flex;
+  flex-direction: column;
+  
+  /*technically not needed*/
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+/*top*/
+#runResetCon {
+  /*border-bottom: 1px solid var(--border);*/
+  flex-grow: 1;
+  display: flex;
+}
+.resetButton {
+  width: 200px;
+  height: 80px;
+  border: 2px solid rgb(127,127,127);
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+#rebirthCon {
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
+}
+#resetEnergyCon {
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
+}
+#energyButton {
+  border-color: var(--yellow);
+  transition: background-color .25s;
+}
+#energyButton:hover {
+  background-color: var(--yellowHover);
+}
+#rankupCon {
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
+}
+#rankupButton {
+  border-color: var(--purple);
+  transition: background-color .25s;
+}
+#rankupButton:hover {
+  background-color: var(--purpleHover);
+}
+/*middle*/
+#runButtonCon {flex-grow: 3; display: flex}
+#runButton {
+  width: 200px;
+  height: 200px;
+  background-color: rgb(180,35,35);
+  border: 8px solid rgb(144,28,28);
+  border-radius: 100%;
+  cursor: pointer;
+  transition: width .2s, height .2s;
+}
+#runButton:hover {width: 220px; height: 220px}
+#runButton:active {width: 180px; height: 180px}
+/*bottom*/
+#runMultiCon {
+  /*border-top: 1px solid var(--border);*/
+  flex-grow: 1;
+}
+
+/*Shop*/
+.shopPet {
+  width: 130px;
+  height: 130px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  margin: 25px auto 25px auto;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  transition: background-color .2s;
 }
