@@ -1,14 +1,171 @@
 <!DOCTYPE html>
+<!--
+MIT License
+
+Copyright (c) 2025 Geogolf1995
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
 <html lang="en">
   <head>
-    <title>Blank</title>
+    <title>HPS</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style.css" />
+    
+    <!-- Libraries -->
+    <script src="alertify/alertify.js" defer="defer"></script>
+    <link rel="stylesheet" href="alertify/alertify.css" />
+    <link rel="stylesheet" href="alertify/default.css" />
+    
+    <!-- Reference files -->
+    <script src="shorthand.js" defer="defer"></script>
+    <script src="canvas.js" defer="defer"></script><!---->
+    <script src="encode.js" defer="defer"></script><!---->
+    
+    <!-- Tab specific files -->
+    <script src="tabs/options.js" defer="defer"></script><!---->
+    <script src="tabs/achievements.js" defer="defer"></script><!---->
+    <script src="tabs/run.js" defer="defer"></script>
+    <script src="tabs/upgrades.js" defer="defer"></script><!---->
+    <script src="tabs/shop.js" defer="defer"></script><!---->
+    <script src="tabs/rebirth.js" defer="defer"></script><!---->
+    
+    <!-- Initialization -->
+    <script src="data.js" defer="defer"></script>
+    <script src="load.js" defer="defer"></script><!---->
     <script src="main.js" defer="defer"></script>
   </head>
   <body>
-    
+    <div id="loadingScreen"></div>
+    <div id="gameScreen" class="chv grayBorder" style="display: none">
+      <div id="resourceCon">
+        <div id="tokensCon">
+          <span class="blueText" style="font-size: 36px"><span id="tokens" class="blueText">999.99M</span> &#10026;</span><br>
+          <span style="font-size: 26px"><span class="blueText">+<span id="tokensPerSec" class="blueText">999.99M</span> &#10026;</span> /sec</span>
+        </div>
+        <div id="rankCon">
+          <span id="rank" class="redText" style="font-size: 26px; font-weight: bold">RANK VIII</span><br>
+          <span id="coins" class="purpleText" style="font-size: 36px">999.99M &#128;</span>
+        </div><!---->
+        <div id="energyCon">
+          <span class="yellowText" style="font-size: 36px"><span id="energy" class="yellowText">999.99M</span> &#9728;</span><br>
+          <span style="font-size: 26px; display: none"><span class="yellowText">+<span id="energyPerSec" class="yellowText">999.99M</span> &#9728;</span> /sec</span>
+        </div>
+      </div>
+      <div id="centralCon" class="scroll">
+        <div id="petConLeft">
+          <div id="petSlot" class="petSlot tte" style="display: none">
+            <span class="chv" style="font-size: 50px; font-weight: bold"></span>
+            <span class="ttc r" style="width: 110px; top: 0px; left: 81px; display: none">
+              <span class="blueText" style="font-size: 17px">+<span class="blueText">999.99M</span> &#10026;</span>/s
+            </span>
+          </div>
+        </div>
+        <div id="tabsCon">
+          <div id="optionsTab"></div>
+          <div id="achievementsTab">
+            <div class="cht" style="font-size: 24px">
+              <span>You have completed <span id="totalAchievements" class="greenText">99</span> achievements</span><br>
+              <span>Increasing <span class="blueText">&#10026;</span> gain by +<span id="achievementMulti" class="blueText">999.99M</span> /sec</span>
+            </div>
+            <hr>
+            <div class="table">
+              <div class="tableRow">
+                <div class="achievementCell tte cht" id="ach0" style="display: none">
+                  <span class="achievementDisplayId chvt">99</span>
+                  <span style="top: 0px; font-size: 19px; font-weight: bold">Title</span>
+                  <span class="ttc t" style="width: 200px; left: -32px; top: -34px">Description</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="runTab">
+            <div id="runResetCon">
+              <div id="rebirthCon" style="display: none"></div>
+              <div id="resetEnergyCon">
+                <div id="energyButton" class="resetButton chv">
+                  <span class="chvt">
+                    <span style="font-size: 26px">Reset <span class="blueText">&#10026;</span> for</span><br>
+                    <span class="yellowText" style="font-size: 30px">+<span id="energyOnReset" class="yellowText">999.99M</span> &#9728;</span>
+                  </span>
+                </div>
+              </div>
+              <div id="rankupCon">
+                <div id="rankupButton" class="resetButton chv tte">
+                  <span id="rankupToRank" class="purpleText chvt" style="font-size: 36px; font-weight: bold">Rank VIII</span>
+                  <span class="ttc rankupButtonTt" style="width: 160px; top: 83px; left: 15px; font-size: 20px">
+                    <span style="font-weight: bold; font-size: 26px">Rankup</span><br>
+                    <span class="blueText">-<span id="rankupTokenCost" class="blueText">999.99M</span> &#10026;</span><br>
+                    <span class="yellowText">-<span id="rankupEnergyCost" class="yellowText">999.99M</span> &#9728;</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div id="runButtonCon">
+              <div id="runButton" class="chv">
+                <span class="chvt" style="font-size: 20px">
+                  <span style="font-size: 30px; font-weight: bold"><span id="runCost">-999.99M</span><span class="blueText"> &#10026;</span></span><br>
+                  <span id="runProgToEnergy">99/99</span> &#8594; <span id="energyOnNextReset">999.99M</span><span class="yellowText">&#9728;</span><br>
+                  <span id="runProgToRankupCon"><span id="runProgToRankup">99/99</span> &#8594; <span id="runToRank">VIII</span></span>
+                </span>
+                <span class="chvt" style="font-size: 30px; font-weight: bold">Requires<br><span id="requiresRank">Rank VIII</span></span>
+              </div>
+            </div>
+            <div id="runMultiCon"></div>
+          </div>
+          <div id="upgradesTab"></div>
+          <div id="shopTab" class="cht scroll" style="height: 100%">
+            <span style="font-size: 26px">Buy letters to increase <span class="blueText">&#10026;</span> production<br>Rankup to unlock more letters</span><br>
+            <span style="font-size: 16px; font-style: italic">You can also buy letters by pressing the appropriate letter on your keyboard</span>
+            <hr>
+            <div id="shopPetsCon" class="table">
+              <div class="tableRow">
+                <div id="shopPet" class="shopPet tte" style="display: none">
+                  <span class="ttc t" style="width: 130px; height: 62px; top: -75px; left: -5px; font-size: 24px">
+                    <span class="yellowText">-<span class="yellowText">999.99M</span> &#9728;</span><br>
+                    <span style="font-size: 24px">-Z</span>
+                  </span>
+                  <span class="ch" style="top: 8px; font-size: 75px; font-weight: bold">Z</span><br>
+                  <span class="ch" style="bottom: 5px; font-size: 20px; width: 100%"><span class="blueText">+<span class="blueText">999.99M</span> &#10026;</span>/s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="rebirthTab"></div>
+        </div>
+        <div id="petConRight"></div>
+      </div>
+      <div id="tabButtonsCon">
+        <div id="tabButton" class="tabButton" style="display: none">
+          <span class="chvt"></span>
+        </div>
+      </div>
+    </div>
+    <div id="infoTextCon" class="ch" style="position: fixed; bottom: 2px; z-index: 100">
+      <span style="font-weight: bold">
+        <span class="infoText">Version <span id="version" style="color: var(--infoText)">99.9</span></span>
+         | 
+        <span class="infoText">Changelog</span>
+      </span>
+    </div>
   </body>
 </html>
