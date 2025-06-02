@@ -18,7 +18,6 @@ hr {width: 100%}
 :root {
   --blackBg: rgb(10,15,15);
   --ttBg: rgb(50,50,50);
-  /*--border: rgb(127,127,127);*/
   --border: rgb(10,15,15);
   
   --red: rgb(220,20,60);
@@ -315,7 +314,8 @@ hr {width: 100%}
 .shopPet {
   width: 130px;
   height: 130px;
-  border: 2px solid var(--border);
+  /*border: 2px solid var(--border);*/
+  border: 2px solid;
   border-radius: 10px;
   margin: 25px auto 25px auto;
   cursor: pointer;
