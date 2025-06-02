@@ -7,7 +7,7 @@
 
 //Update Messages
 const updateMessages = {
-  "beta-1.0": "- Nothing... yet",
+  "v1.1": "- Added a changelog<br>- Added 1 achievement<br> - Several visual feedback improvements<br>- Fixed 2 bugs",
 }
 
 
@@ -31,8 +31,10 @@ function updateVersion(loadUser) {
   let updated = false;
   //for when localStorage is added
   switch(loadUser.version){
+    //load from latest public release, into beta releases
     case "v1.0": {
-      //load from latest public release, into beta releases
+      loadUser.version = "v1.1";
+      updated = true;
     }
     case "beta-1.0": {
       //update beta releases
@@ -41,7 +43,7 @@ function updateVersion(loadUser) {
   }
   //load updated data into user
   user = JSON.parse(JSON.stringify(loadUser));
-  console.log("Version loaded successfully");
+  console.log("Version "+loadUser.version+" loaded successfully");
   //set game initilization
   initialization(updated);
 }
@@ -66,7 +68,23 @@ function initialization(updated) {
   //send update message
   setTimeout(()=>{
     if (updated) {
-      
+      let updateMessage = "";
+      for (let version in updateMessages) {
+        updateMessage+="<br>Version "+version+"<br>"+updateMessages[version]+"<br>";
+      }
+      alertify.alert("What's New:<br>"+updateMessage);
+      alertify.message("Loaded Version "+user.version);
+      /*
+    if (updated) {
+      let updateMessage = "";
+      for (let version in updateMessages) {
+        updateMessage += "<br>"+version+"<br>"+updateMessages[version]+"<br>";
+        if (version == versionStart) {break}
+      }
+      alertify.alert("What's New:"+updateMessage);
+      alertify.message("Loaded Version " + versionStart + " > " + user.version)
+    }
+      */
     }
     else {
       alertify.message("Loaded Version "+user.version);
@@ -78,7 +96,6 @@ function setGame() {
   
   //achievements
   getAchievementsTokensPerSec();
-  
   
   //resources
   getTokensPerSec();
@@ -92,8 +109,11 @@ function setGame() {
   getRunCost();
   for (let i=energyTiers.length-1; i>=0; i--) {
     if (user.runCount>=energyTiers[i].runReq) {
-      game.energyTier = i;
+      game.energyTier = i+1;
       break;
+    }
+    else {
+      game.energyTier = 0;
     }
   }
 }

@@ -1,25 +1,35 @@
 /* Base Elements */
-body {background-color: var(--blackBg); user-select: none}
+body {
+  background-color: var(--blackBg);
+  user-select: none;
+  font-size: 18px;
+}
 body::-webkit-scrollbar {display: none}
-span {color: rgb(210,205,205); font-family: Book Antiqua; text-shadow: 0px 0px 10px black}
+span {
+  color: rgb(210,205,205);
+  font-family: Book Antiqua;
+  text-shadow: 0px 0px 10px black;
+}
 hr {width: 100%}
+#loadingScreen {font-size: 16px}/*don't forget lol*/
 
 
 /* Variables (mostly for colors) */
 :root {
   --blackBg: rgb(10,15,15);
   --ttBg: rgb(50,50,50);
-  --border: rgb(127,127,127);
+  /*--border: rgb(127,127,127);*/
+  --border: rgb(10,15,15);
   
   --red: rgb(220,20,60);
   --orange: rgb(255,165,0);
   --yellow: rgb(212,175,55);
-  --yellowHover: rgb(212,175,55,0.25);
+  --yellowHover: rgb(212,175,55,0.20);
   --green: rgb(150,200,50);
   --darkGreen: rgb(105,140,35);
   --blue: rgb(50,50,250);
   --purple: rgb(150,0,210);
-  --purpleHover: rgb(150,0,210,0.25);
+  --purpleHover: rgb(150,0,210,0.20);
   --white: rgb(255,255,255);
   
   --infoText: rgb(100,100,225);
@@ -67,7 +77,6 @@ hr {width: 100%}
 .purpleText {color: var(--purple); text-shadow: 0px 0px 25px}
 .whiteText {color: var(--white); text-shadow: 0px 0px 25px}
 .infoText {
-  font-size: 16px;
   color: var(--infoText);
   cursor: pointer;
   transition: font-size .4s;
@@ -96,23 +105,24 @@ hr {width: 100%}
   flex-direction: column;
   width: 91vw;
   height: 91vh;
+  font-size: 16px;
 }
 /*the top block*/
 #resourceCon {
   display: flex;
+  justify-content: space-around;
   border-bottom: 1px solid var(--border);
 }
 #tokensCon {
-  flex-grow: 9;
+  width: 40%;
   text-align: center;
 }
 #rankCon {
-  flex-grow: 2;
+  flex-grow: 1;
   text-align: center;
-  display: none;
 }
 #energyCon {
-  flex-grow: 9;
+  width: 40%;
   text-align: center;
 }
 

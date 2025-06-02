@@ -73,6 +73,7 @@ function rankupButton() {
         user.rank++;
         //updates
         updateRun();
+        updateRank();
       }
       else if (logActions) {console.log("rankupButton > fail, user does not have enough energy")}
     }
@@ -120,27 +121,46 @@ function updateRankupButton() {
 }
 function updateRunButton() {
   if (logUpdates) {console.log("updateRunButton")}
-  let runButtonMain = di("runButton").firstElementChild,
-      runButtonRankupMessage = di("runButton").lastElementChild,
-      prevRunReqToEnergy = (game.energyTier>0)?energyTiers[game.energyTier-1].runReq:0;
-  //check if user has finished running this rank
+  let prevRunReqToEnergy = (game.energyTier>0)?energyTiers[game.energyTier-1].runReq:0;
+  //show rankup message
   if (user.runCount>=ranks[user.rank].runReq) {
+    hideId("runButtonMain");
+    showId("runButtonRankupMessage");
+    hideId("runButtonEndMessage");
+    di("requiresRank").textContent = "Rank "+ranks[user.rank].nextName;
+  }
+  //show end message
+  else if (user.runCount+1>=runCosts.length) {
+    hideId("runButtonMain");
+    hideId("runButtonRankupMessage");
+    showId("runButtonEndMessage");
+  }
+  //show main
+  else {
+    showId("runButtonMain");
+    hideId("runButtonEndMessage");
+    hideId("runButtonRankupMessage");
+  }
+  /*//check if user has finished running this rank
+  if (user.runCount>=ranks[user.rank].runReq) {
+    hideId("runButtonEndMessage");
     //if so, hide the main and show the rankup message
-    runButtonMain.style.display = "none";
-    runButtonRankupMessage.style.display = "";
+    hideId("runButtonMain");
+    showId("runButtonRankupMessage");
     di("requiresRank").textContent = "Rank "+ranks[user.rank].nextName;
   }
   else {
+    hideId("runButtonEndMessage");
     //otherwise hide the rankup message and show the main
-    runButtonRankupMessage.style.display = "none";
-    runButtonMain.style.display = "";
-  }
+    hideId("runButtonRankupMessage");
+    showId("runButtonMain");
+  }*/
   //update html
   di("runCost").textContent = "-"+game.runTokenCost;
   di("runProgToEnergy").textContent = (user.runCount-prevRunReqToEnergy)+"/"+(energyTiers[game.energyTier].runReq-prevRunReqToEnergy);
   //show the energy gained on the next tier only if the user has reached that tier before
   di("energyOnNextReset").textContent = (game.energyTier+1<=user.highestEnergyTier) ? e(energyTiers[game.energyTier+1].currentGain) : "";
-  di("runProgToRankup").textContent = (user.runCount/*-prevRunReqToRankup*/)+"/"+(ranks[user.rank].runReq/*-prevRunReqToRankup*/);
+  di("runProgToRankup").textContent = user.runCount+"/"+ranks[user.rank].runReq;
   di("runToRank").textContent = ranks[user.rank].nextName;
 }
 //updates everything in the tab. mainly used when switching tabs
