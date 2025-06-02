@@ -45,7 +45,6 @@ for (let num in achievements) {
   di("ach0").parentElement.appendChild(ach);
 }
 //shop
-let constructingShopTier = 1;
 for (let name in game.pets) {
   let isNewTier = game.pets[petsAsStr[((name==petsAsStr[0])?1:petsAsStr.indexOf(name))-1]].tier<game.pets[name].tier;
   //if the pet belongs to a higher tier than the previous, create a new tableRow
@@ -67,6 +66,7 @@ for (let name in game.pets) {
   petChildren[3].firstElementChild.firstElementChild.setAttribute("id", "shopPetGain"+name);
   //color main button (not the tooltip)
   petChildren[1].classList.add(tierColors[game.pets[name].tier]+"Text");
+  pet.style.borderColor = colors[tierColors[game.pets[name].tier]];
   //update pet name
   petChildren[1].textContent = name;
   //add functionality
