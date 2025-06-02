@@ -23,34 +23,86 @@ function setUser() {
     //other
     tab: "run",
     lastUpdate: Date.now(),
-    version: "1.0",
+    version: "v1.1",
   }
 }
-/*var devUser = {
-  //resources
-  tokens: 3875,
-  energy: 80,
-  
-  //pets & shop
-  hasPets: "",
-  
-  //achievements
-  hasAchievements: [],
-  
-  //run
-  runCount: 14,
-  highestEnergyTier: 3,
-  rank: 0,
-  
-  //stats
-  totalRuns: 0,
-  totalEnergyResets: 0,
-  
-  //other
-  tab: "achievements",
-  lastUpdate: Date.now(),
-  version: "1.0",
-}*/
+const devUsers = {
+  default: {
+    //resources
+    tokens: 0,
+    energy: 0,
+    
+    //pets & shop
+    hasPets: "",
+    
+    //achievements
+    hasAchievements: [],
+    
+    //run
+    runCount: 0,
+    highestEnergyTier: 0,
+    rank: 0,
+    
+    //stats
+    totalRuns: 0,
+    totalEnergyResets: 0,
+    
+    //other
+    tab: "run",
+    lastUpdate: Date.now(),
+    version: "v1.0",
+  },
+  "v1.1": {
+    //resources
+    tokens: 1000,
+    energy: 100,
+    
+    //pets & shop
+    hasPets: "EDCBA",
+    
+    //achievements
+    hasAchievements: ["1", "2"],
+    
+    //run
+    runCount: 14,
+    highestEnergyTier: 3,
+    rank: 0,
+    
+    //stats
+    totalRuns: 303,
+    totalEnergyResets: 48,
+    
+    //other
+    tab: "run",
+    lastUpdate: Date.now(),
+    version: "v1.0",
+  },
+  testing: {
+    //resources
+    tokens: 1700,
+    energy: 100,
+    
+    //pets & shop
+    hasPets: "EDCBA",
+    
+    //achievements
+    hasAchievements: ["1", "2"],
+    
+    //run
+    runCount: 13,
+    highestEnergyTier: 3,
+    rank: 0,
+    
+    //stats
+    totalRuns: 302,
+    totalEnergyResets: 48,
+    
+    //other
+    tab: "run",
+    lastUpdate: Date.now(),
+    version: "v1.1",
+  },
+}
 var game = {
   //resourcces
   tokensPerSec: 1,
@@ -90,7 +142,6 @@ var game = {
   runTokenCost: 1,
   energyTier: 0,
 }
-/*var user = setUser();*/
 
 
 //Do not change
@@ -100,7 +151,7 @@ const checkRate = 10;
 
 //debugging
 const logActions = true;
-const logUpdates = true;
+const logUpdates = false;
 
 
 //Colors & Icons
@@ -120,6 +171,7 @@ var tierColors = {
   3: "purple",
   4: "red",
 }
+//customize icons later
 
 
 //Pets
@@ -136,6 +188,7 @@ const achievements = [
   null,
   {title: "ABCs", description: "Own the first three letters"},
   {title: "Now What?", description: "Own all green letters"},
+  {title: "Rankup", description: "Rankup for the first time"},
 ];
 const hasAchColor = "rgb(25,85,25)";
 const hasAchIdColor = "rgb(75,125,25,0.75)"
@@ -158,8 +211,8 @@ const energyTiers = [
   {runReq: Infinity, currentGain: 33},
 ];
 const ranks = [
-  {nextName: "I", runReq: 14, tokenCost: 1e3, energyCost: 100},
-  {nextName: "End", runReq: Infinity, tokenCost: Infinity, energyCost: Infinity},
+  {name: "0", nextName: "I", runReq: 14, tokenCost: 1e3, energyCost: 100},
+  {name: "I", nextName: "End", runReq: Infinity, tokenCost: Infinity, energyCost: Infinity},
 ];
 
 

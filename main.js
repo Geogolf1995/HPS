@@ -150,6 +150,8 @@ function updateAll() {
   //top
   updateResources();
   updateResourcesPerSec();
+  updateRank();
+  updateCoins();
   
   //middle
   //pets
@@ -173,6 +175,14 @@ function updateResources() {
 function updateResourcesPerSec() {
   /*if (logUpdates) {console.log("updateResourcesPerSec")}*/
   di("tokensPerSec").textContent = e(game.tokensPerSec);
+}
+function updateRank() {
+  if (logUpdates) {console.log("updateRank")}
+  di("rank").textContent = "Rank "+ranks[user.rank].name;
+}
+function updateCoins() {
+  if (logUpdates) {console.log("updateCoins")}
+  di("coins").textContent = 0;
 }
 function updatePets() {
   if (logUpdates) {console.log("updatePets")}
@@ -224,22 +234,15 @@ function showTab(name) {
 //Occasional Checks
 function checkUnlocks() {
   //resources
-  if (user.highestEnergyTier>0) {
-    showId("energyCon");
-  }
-  else {
-    hideId("energyCon");
-  }
+  if (user.highestEnergyTier>0) {showId("energyCon")}
+  else {hideId("energyCon")}
+  if (user.rank>0) {showId("rankCon")}
+  else {hideId("rankCon")}
   //run
-  if (user.highestEnergyTier>1) {
+  if (user.highestEnergyTier>1 && user.rank+1<ranks.length) {
     showId("runProgToRankupCon");
   }
-  else {
-    hideId("runProgToRankupCon");
-  }
-  if (user.highestEnergyTier>2) {
-    
-  }
+  else {hideId("runProgToRankupCon")}
   //tabs
   if (user.highestEnergyTier>0) {
     showId("optionsTabButton");
@@ -262,13 +265,11 @@ function checkUnlocks() {
 }
 function checkAchievements() {
   //ABCs
-  if (!user.hasAchievements.includes("1") && user.hasPets.includes("CBA")) {
-    giveAchievement("1");
-  }
+  if (!user.hasAchievements.includes("1") && user.hasPets.includes("CBA")) {giveAchievement("1")}
   //Now What?
-  if (!user.hasAchievements.includes("2") && user.hasPets.includes("EDCBA")) {
-    giveAchievement("2");
-  }
+  if (!user.hasAchievements.includes("2") && user.hasPets.includes("EDCBA")) {giveAchievement("2")}
+  //Rankup
+  if (!user.hasAchievements.includes("3") && user.rank>0) {giveAchievement("3")}
 }
 
 
@@ -278,7 +279,7 @@ updateAll();
 showTab("run");*/
 window.addEventListener("load", ()=>{
   //load saved data
-  loadGame(/*devUser*/);
+  loadGame();
   //start game ticking
   gameInterval = setInterval(runGameTime, 1e3/tps);
   checksInterval = setInterval(()=>{
@@ -286,3 +287,5 @@ window.addEventListener("load", ()=>{
     checkAchievements();
   }, 1000/checkRate);
 });
+
+console.log("skip to the new content with:", "loadGame(devUsers[\"v1.1\"])");

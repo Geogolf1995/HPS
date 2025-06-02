@@ -64,8 +64,8 @@ SOFTWARE.
         </div>
         <div id="rankCon">
           <span id="rank" class="redText" style="font-size: 26px; font-weight: bold">RANK VIII</span><br>
-          <span id="coins" class="purpleText" style="font-size: 36px">999.99M &#128;</span>
-        </div><!---->
+          <span class="purpleText" style="font-size: 36px; display: none"><span id="coins" class="purpleText">999.99M</span> &#128;</span>
+        </div>
         <div id="energyCon">
           <span class="yellowText" style="font-size: 36px"><span id="energy" class="yellowText">999.99M</span> &#9728;</span><br>
           <span style="font-size: 26px; display: none"><span class="yellowText">+<span id="energyPerSec" class="yellowText">999.99M</span> &#9728;</span> /sec</span>
@@ -122,12 +122,13 @@ SOFTWARE.
             </div>
             <div id="runButtonCon">
               <div id="runButton" class="chv">
-                <span class="chvt" style="font-size: 20px">
+                <span id="runButtonMain" class="chvt" style="font-size: 20px">
                   <span style="font-size: 30px; font-weight: bold"><span id="runCost">-999.99M</span><span class="blueText"> &#10026;</span></span><br>
                   <span id="runProgToEnergy">99/99</span> &#8594; <span id="energyOnNextReset">999.99M</span><span class="yellowText">&#9728;</span><br>
                   <span id="runProgToRankupCon"><span id="runProgToRankup">99/99</span> &#8594; <span id="runToRank">VIII</span></span>
                 </span>
-                <span class="chvt" style="font-size: 30px; font-weight: bold">Requires<br><span id="requiresRank">Rank VIII</span></span>
+                <span id="runButtonRankupMessage" class="chvt" style="font-size: 30px; font-weight: bold">Requires<br><span id="requiresRank">Rank VIII</span></span>
+                <span id="runButtonEndMessage" class="chvt" style="font-size: 32px; font-weight: bold">The End</span>
               </div>
             </div>
             <div id="runMultiCon"></div>
@@ -161,10 +162,10 @@ SOFTWARE.
       </div>
     </div>
     <div id="infoTextCon" class="ch" style="position: fixed; bottom: 2px; z-index: 100">
-      <span style="font-weight: bold">
+      <span style="font-weight: bold; font-size: 20px">
         <span class="infoText">Version <span id="version" style="color: var(--infoText)">99.9</span></span>
          | 
-        <span class="infoText">Changelog</span>
+        <span class="infoText" onmouseup="window.open('https://geogolf1995.github.io/HPS-Changelog/')">Changelog</span>
       </span>
     </div>
   </body>
