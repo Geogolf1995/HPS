@@ -7,6 +7,17 @@ document.addEventListener("keydown", (event) => {
 
 
 //HTML/CSS construction
+//resource icons
+let iconsInDoc = {
+  tokens: document.getElementsByClassName("tokensIcon"),
+  energy: document.getElementsByClassName("energyIcon"),
+  coins: document.getElementsByClassName("coinsIcon"),
+}
+for (let rss in iconsInDoc) {
+  for (let el of iconsInDoc[rss]) {
+    el.innerHTML = resources[rss].icon;
+  }
+}
 //pets
 for (let name in game.pets) {
   let petSlot = di("petSlot").cloneNode(true);
@@ -74,6 +85,28 @@ for (let name in game.pets) {
   //add new pet to document
   pet.style.display = "";
   di("shopPetsCon").lastElementChild.appendChild(pet);
+}
+//upgrades
+for (let row in upgradesCol0) {
+  let buttonConEl = di("upgradesButtonCon").cloneNode(true),
+      buttonEl = buttonConEl.firstElementChild,
+      buttonElChildren = buttonEl.children;
+  //id the button
+  buttonEl.setAttribute("id", "upgradesButton0-"+row);
+  buttonElChildren[0].setAttribute("id", "upgradesButtonTitle0-"+row);
+  buttonElChildren[2].firstElementChild.setAttribute("id", "upgradesButtonDescription0-"+row);
+  buttonElChildren[2].lastElementChild.setAttribute("id", "upgradesButtonGain0-"+row);
+  buttonElChildren[3].firstElementChild.setAttribute("id", "upgradesButtonLevel0-"+row);
+  buttonElChildren[5].firstElementChild.setAttribute("id", "upgradesButtonCost0-"+row);
+  //add total levels, everything else changes depending on the upgrade's current level
+  buttonElChildren[3].lastElementChild.textContent = upgradesCol0[row].length-1;
+  //add functionality
+  buttonEl.addEventListener("click", ()=>{
+    buyUpgradeCol0(row);
+  });
+  //add button to column
+  buttonConEl.style.display = "";
+  di("upgradesColumn1").appendChild(buttonConEl);
 }
 //tab buttons
 for (let name in tabData) {
@@ -164,16 +197,16 @@ function updateAll() {
   updateRunButton();
   //shop
   updateShop();
+  //upgrades
+  updateUpgrades();
   
   //bottom
 }
 function updateResources() {
-  /*if (logUpdates) {console.log("updateResources")}*/
   di("tokens").textContent = e(user.tokens);
   di("energy").textContent = e(user.energy);
 }
 function updateResourcesPerSec() {
-  /*if (logUpdates) {console.log("updateResourcesPerSec")}*/
   di("tokensPerSec").textContent = e(game.tokensPerSec);
 }
 function updateRank() {
@@ -222,7 +255,7 @@ function showTab(name) {
   for (let name in tabData) {
     hideId(name+"Tab");
   }
-  //update html
+  //update tab
   window["update"+name.charAt(0).toUpperCase()+name.substring(1)]();
   //show chosen tab
   showId(name+"Tab", (name=="run")?"flex":"");
@@ -260,23 +293,23 @@ function checkUnlocks() {
     visOff("petConLeft");
     visOff("petConRight");
   }
-  hideId("upgradesTabButton");
+  if (user.rank>0) {showId("upgradesTabButton")}
+  else {hideId("upgradesTabButton")}
   hideId("rebirthTabButton");
 }
 function checkAchievements() {
-  //ABCs
+  //1: ABCs
   if (!user.hasAchievements.includes("1") && user.hasPets.includes("CBA")) {giveAchievement("1")}
-  //Now What?
+  //2: That's It?
   if (!user.hasAchievements.includes("2") && user.hasPets.includes("EDCBA")) {giveAchievement("2")}
-  //Rankup
+  //3: Rankup
   if (!user.hasAchievements.includes("3") && user.rank>0) {giveAchievement("3")}
+  //4: Respect
+  if (!user.hasAchievements.includes("4") && user.hasPets.includes("F")) {giveAchievement("4")}
 }
 
 
 //Initialization
-/*checkUnlocks();
-updateAll();
-showTab("run");*/
 window.addEventListener("load", ()=>{
   //load saved data
   loadGame();
@@ -287,5 +320,4 @@ window.addEventListener("load", ()=>{
     checkAchievements();
   }, 1000/checkRate);
 });
-
-console.log("skip to the new content with:", "loadGame(devUsers[\"v1.1\"])");
+console.log("skip to the new content with:", "loadGame(devUsers[latestVersion])");

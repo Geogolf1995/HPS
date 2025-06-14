@@ -3,10 +3,10 @@ body {
   background-color: var(--blackBg);
   user-select: none;
   font-size: 18px;
+  color: var(--gray);
 }
 body::-webkit-scrollbar {display: none}
 span {
-  color: rgb(210,205,205);
   font-family: Book Antiqua;
   text-shadow: 0px 0px 10px black;
 }
@@ -18,7 +18,9 @@ hr {width: 100%}
 :root {
   --blackBg: rgb(10,15,15);
   --ttBg: rgb(50,50,50);
-  --border: rgb(10,15,15);
+  /*--border: rgb(10,15,15);*/
+  --border: rgb(127,127,127);
+  --grayBorder: rgb(127,127,127);
   
   --red: rgb(220,20,60);
   --orange: rgb(255,165,0);
@@ -31,6 +33,7 @@ hr {width: 100%}
   --purpleHover: rgb(150,0,210,0.20);
   --white: rgb(255,255,255);
   
+  --gray: rgb(210,205,205);
   --infoText: rgb(100,100,225);
 }
 
@@ -83,6 +86,7 @@ hr {width: 100%}
 .infoText:hover {
   font-size: 24px;
 }
+.tokenIcon {text-shadow: 0px 0px 25px}
 
 
 /* UI Display & Arrangement */
@@ -314,7 +318,7 @@ hr {width: 100%}
 .shopPet {
   width: 130px;
   height: 130px;
-  /*border: 2px solid var(--border);*/
+  /*border: 2px solid var(--grayBorder);*/
   border: 2px solid;
   border-radius: 10px;
   margin: 25px auto 25px auto;
@@ -322,4 +326,16 @@ hr {width: 100%}
   position: relative;
   text-align: center;
   transition: background-color .2s;
+}
+
+/*Upgrades*/
+.upgradesButtonCon {
+  margin-bottom: 10px;
+}
+.upgradesButton {
+  width: 250px;
+  height: 90px;
+  border: 2px solid var(--purple);
+  border-radius: 10px;
+  position: relative;
 }
