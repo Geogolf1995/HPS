@@ -1,22 +1,18 @@
-//info
-//public version format: public release adding content . public release tweaking content
-//beta version format: 'beta' - latest public release . beta release adding or tweaking content
-//public version: 1.0
-//beta version: beta-1.0
-
-
 //Update Messages
 const updateMessages = {
-  "v1.1": "- Added a changelog<br>- Added 1 achievement<br> - Several visual feedback improvements<br>- Fixed 2 bugs",
+  "v2.0": "- Added upgrades for green letters<br>- Added 2 more letters<br>- Added 1 more achievement<br>- Fixed several color inconsistencies",
+  "v1.1": "- Added a changelog<br>- Added 1 achievement<br>- Several visual feedback improvements<br>- Fixed 2 bugs",
 }
 
 
 //load from local storage if available
 var savedUser;
+var fromVersion = latestVersion;
 function loadGame(importedUser) {
   savedUser = importedUser || /*JSON.parse(localStorage.getItem("user"))*/setUser();
   if (savedUser != null) {
     console.log("Loading from version "+savedUser.version);
+    fromVersion = savedUser.version;
     //do not modify saved user in case version update breaks the game
     let loadUser = JSON.parse(JSON.stringify(savedUser));
     updateVersion(loadUser);
@@ -30,17 +26,16 @@ function loadGame(importedUser) {
 function updateVersion(loadUser) {
   let updated = false;
   //for when localStorage is added
-  switch(loadUser.version){
-    //load from latest public release, into beta releases
-    case "v1.0": {
-      loadUser.version = "v1.1";
-      updated = true;
-    }
-    case "beta-1.0": {
-      //update beta releases
-      updated = true;
-    }
+  //load from latest public release into beta releases (later)
+  if (loadUser.version=="v1.0") {
+    loaduser.version = "v1.1";
   }
+  if (loadUser.version=="v1.1") {
+    loadUser.version = "v2.0";
+    loadUser.upgradesCol0 = [0,0,0,0,0];
+    updated = true;
+  }
+  
   //load updated data into user
   user = JSON.parse(JSON.stringify(loadUser));
   console.log("Version "+loadUser.version+" loaded successfully");
@@ -70,21 +65,11 @@ function initialization(updated) {
     if (updated) {
       let updateMessage = "";
       for (let version in updateMessages) {
+        if (version == fromVersion) {break}
         updateMessage+="<br>Version "+version+"<br>"+updateMessages[version]+"<br>";
       }
       alertify.alert("What's New:<br>"+updateMessage);
       alertify.message("Loaded Version "+user.version);
-      /*
-    if (updated) {
-      let updateMessage = "";
-      for (let version in updateMessages) {
-        updateMessage += "<br>"+version+"<br>"+updateMessages[version]+"<br>";
-        if (version == versionStart) {break}
-      }
-      alertify.alert("What's New:"+updateMessage);
-      alertify.message("Loaded Version " + versionStart + " > " + user.version)
-    }
-      */
     }
     else {
       alertify.message("Loaded Version "+user.version);
@@ -94,15 +79,15 @@ function initialization(updated) {
 function setGame() {
   //the order matters!
   
-  //achievements
-  getAchievementsTokensPerSec();
-  
-  //resources
-  getTokensPerSec();
-  
   //pets & shop
   for (let name of user.hasPets) {
     addPet(name);
+  }
+  for (let name in game.pets) {
+    //add gain from 1st upgrade
+    if (game.pets[name].tier==0) {
+      
+    }
   }
   
   //run
@@ -116,4 +101,21 @@ function setGame() {
       game.energyTier = 0;
     }
   }
+  
+  //upgrades
+  //column 0
+  for (let i=0; i<petsInTier.length; i++) {
+    let gains = getUpgradesCol0Gain(i);
+    for (let j=0; j<petsInTier[i].length; j++) {
+      let name = petsInTier[i][j];
+      game.pets[name].tokensPerSec+=gains[name];
+    }
+  }
+  
+  
+  //achievements
+  getAchievementsTokensPerSec();
+  
+  //resources
+  getTokensPerSec();
 }

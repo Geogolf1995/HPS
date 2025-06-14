@@ -34,6 +34,7 @@ function buyPet(name) {
   }
   else if (logActions) {console.log("buyPet("+name+") > fail, user already has pet")}
 }
+
 //changes user data
 function givePet(name) {
   if (logActions) {console.log("givePet("+name+")")}
@@ -57,6 +58,7 @@ function takePet(name) {
   }
   else if (logActions) {console.log("takePet("+name+") > fail, user does not have this pet")}
 }
+
 //purely visual
 function addPet(name) {
   di("petSlotIcon"+name).textContent = name;
