@@ -108,34 +108,6 @@ const devUsers = {
     lastUpdate: null,
     version: "v2.0",
   },
-  testing: {
-    //resources
-    tokens: 1000,
-    energy: 0,
-    
-    //pets & shop
-    hasPets: "JIHGFEDCBA",
-    
-    //achievements
-    hasAchievements: ["1","2","3","4","5"],
-    
-    //run
-    runCount: 19,
-    highestEnergyTier: 5,
-    rank: 1,
-    
-    //upgrades
-    upgradesCol0: [10, 0, 0, 0, 0],
-    
-    //stats
-    totalRuns: 2812,
-    totalEnergyResets: 333,
-    
-    //other
-    tab: "run",
-    lastUpdate: Date.now(),
-    version: "v2.1",
-  },
 }
 function getNewGame() {
   return {
@@ -175,7 +147,7 @@ const checkRate = 10;
 
 //debugging
 const logActions = true;
-const logUpdates = false;
+const logUpdates = true;
 
 
 //Colors & Icons

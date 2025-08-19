@@ -1,10 +1,3 @@
-//info
-//public version format: public release adding content . public release tweaking content
-//beta version format: 'beta' - latest public release . beta release adding or tweaking content
-//public version: 1.0
-//beta version: beta-1.0
-
-
 //Update Messages
 const updateMessages = {
   "v2.1": "- Added more upgrades for green letters<br>- Added 3 more blue letters<br>- Fixed 3 bugs",

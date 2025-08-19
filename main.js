@@ -204,12 +204,10 @@ function updateAll() {
   //bottom
 }
 function updateResources() {
-  /*if (logUpdates) {console.log("updateResources")}*/
   di("tokens").textContent = e(user.tokens);
   di("energy").textContent = e(user.energy);
 }
 function updateResourcesPerSec() {
-  /*if (logUpdates) {console.log("updateResourcesPerSec")}*/
   di("tokensPerSec").textContent = e(game.tokensPerSec);
 }
 function updateRank() {
