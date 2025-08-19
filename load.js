@@ -1,5 +1,6 @@
 //Update Messages
 const updateMessages = {
+  "v2.1": "- Added more upgrades for green letters<br>- Added 3 more blue letters<br>- Fixed 3 bugs",
   "v2.0": "- Added upgrades for green letters<br>- Added 2 more letters<br>- Added 1 more achievement<br>- Fixed several color inconsistencies",
   "v1.1": "- Added a changelog<br>- Added 1 achievement<br>- Several visual feedback improvements<br>- Fixed 2 bugs",
 }
@@ -9,7 +10,7 @@ const updateMessages = {
 var savedUser;
 var fromVersion = latestVersion;
 function loadGame(importedUser) {
-  savedUser = importedUser || /*JSON.parse(localStorage.getItem("user"))*/setUser();
+  savedUser = importedUser || /*JSON.parse(localStorage.getItem("user"))*/getNewUser();
   if (savedUser != null) {
     console.log("Loading from version "+savedUser.version);
     fromVersion = savedUser.version;
@@ -18,8 +19,8 @@ function loadGame(importedUser) {
     updateVersion(loadUser);
   }
   else {
-    console.log("Loading version: "+setUser().version);
-    user = setUser();
+    console.log("Loading version: "+getNewUser().version);
+    user = getNewUser();
     initialization();
   }
 }
@@ -28,11 +29,15 @@ function updateVersion(loadUser) {
   //for when localStorage is added
   //load from latest public release into beta releases (later)
   if (loadUser.version=="v1.0") {
-    loaduser.version = "v1.1";
+    loadUser.version = "v1.1";
   }
   if (loadUser.version=="v1.1") {
     loadUser.version = "v2.0";
     loadUser.upgradesCol0 = [0,0,0,0,0];
+    updated = true;
+  }
+  if (loadUser.version=="v2.0") {
+    loadUser.version = "v2.1";
     updated = true;
   }
   
@@ -51,6 +56,7 @@ function initialization(updated) {
   save();
   //show or hide relevant content
   checkUnlocks();
+  
   //update all visible numbers
   updateAll();
   //update version text
@@ -80,10 +86,13 @@ function setGame() {
   //the order matters!
   
   //pets & shop
-  for (let name of user.hasPets) {
-    addPet(name);
-  }
   for (let name in game.pets) {
+    if (user.hasPets.includes(name)) {
+      addPet(name);
+    }
+    else {
+      removePet(name);
+    }
     //add gain from 1st upgrade
     if (game.pets[name].tier==0) {
       

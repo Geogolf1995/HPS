@@ -1,5 +1,5 @@
 //User & Game
-function setUser() {
+function getNewUser() {
   return {
     //resources
     tokens: 0,
@@ -25,7 +25,7 @@ function setUser() {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v2.0",
   }
 }
@@ -52,7 +52,7 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v1.0",
   },
   "v2.0": {
@@ -77,11 +77,39 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v1.1",
   },
+  "v2.1": {
+    //resources
+    tokens: 2000,
+    energy: 0,
+    
+    //pets & shop
+    hasPets: "GFEDCBA",
+    
+    //achievements
+    hasAchievements: ["1","2","3","4"],
+    
+    //run
+    runCount: 0,
+    highestEnergyTier: 3,
+    rank: 1,
+    
+    //upgrades
+    upgradesCol0: [5, 0, 0, 0, 0],
+    
+    //stats
+    totalRuns: 704,
+    totalEnergyResets: 95,
+    
+    //other
+    tab: "run",
+    lastUpdate: null,
+    version: "v2.0",
+  },
 }
-function setGame() {
+function getNewGame() {
   return {
     //resources
     tokensPerSec: 1,
@@ -95,6 +123,9 @@ function setGame() {
       E: {tier: 0, energyCost: 32, petReq: "D", tokensPerSec: 9},
       F: {tier: 1, energyCost: 70, petReq: "ABCDE", tokensPerSec: 15},
       G: {tier: 1, energyCost: 150, petReq: "ABCDEF", tokensPerSec: 20},
+      H: {tier: 1, energyCost: 250, petReq: "ABCDEG", tokensPerSec: 26},
+      I: {tier: 1, energyCost: 350, petReq: "ABCDEH", tokensPerSec: 32},
+      J: {tier: 1, energyCost: 450, petReq: "ABCDEI", tokensPerSec: 40},
     },
     
     //achievements
@@ -105,8 +136,8 @@ function setGame() {
     energyTier: 0,
   }
 }
-var game = setGame();
-const latestVersion = "v2.0";
+var game = getNewGame();
+const latestVersion = "v2.1";
 
 
 //Do not change
@@ -164,6 +195,7 @@ const achievements = [
   {title: "That's It?", description: "Own all green letters"},
   {title: "Rankup", description: "Rankup for the first time"},
   {title: "Respect", description: "Buy the first blue letter"},
+  {title: "Now What?", description: "Own all blue letters"},
 ];
 const hasAchColor = "rgb(25,85,25)";
 const hasAchIdColor = "rgb(75,125,25,0.75)"
@@ -178,18 +210,24 @@ const runCosts = [
   325, 450, 575, 700,
   
   950, 1100, 1250, 1400, 1550,
+  1800, 2000, 2200, 2400, 2600,
+  2750, 3000, 3250, 3500,
   Infinity,
 ];
 const energyTiers = [
   {runReq: 5, currentGain: 0},
   {runReq: 10, currentGain: 1},
   {runReq: 14, currentGain: 10},
+  
   {runReq: 19, currentGain: 33},
-  {runReq: Infinity, currentGain: 100},
+  {runReq: 24, currentGain: 100},
+  {runReq: 28, currentGain: 130},
+  {runReq: Infinity, currentGain: 160},
 ];
 const ranks = [
   {name: "0", nextName: "I", runReq: 14, tokenCost: 1e3, energyCost: 100},
-  {name: "I", nextName: "End", runReq: Infinity, tokenCost: Infinity, energyCost: Infinity},
+  {name: "I", nextName: "II", runReq: 28, tokenCost: Infinity, energyCost: Infinity},
+  {name: "II", nextName: "End", runReq: Infinity, tokenCost: Infinity, energyCost: Infinity},
 ];
 
 
@@ -226,6 +264,38 @@ const upgradesCol0 = [
       cost: 5e3,
       gain: 5,
     },
+    
+    {
+      title: "Even Better "+makeColoredPetSpan(petsInTier[0][0]),
+      description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
+      cost: 7.5e3,
+      gain: 2,
+    },
+    {
+      title: "Even Better "+makeColoredPetSpan(petsInTier[0][1]),
+      description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][1])+" by ",
+      cost: 10e3,
+      gain: 4,
+    },
+    {
+      title: "Even Better "+makeColoredPetSpan(petsInTier[0][2]),
+      description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][2])+" by ",
+      cost: 12.5e3,
+      gain: 6,
+    },
+    {
+      title: "Even Better "+makeColoredPetSpan(petsInTier[0][3]),
+      description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
+      cost: 15e3,
+      gain: 8,
+    },
+    {
+      title: "Even Better "+makeColoredPetSpan(petsInTier[0][4]),
+      description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
+      cost: 17.5e3,
+      gain: 10,
+    },
+    
     {
       title: "Maxed",
       description: "",
@@ -234,9 +304,6 @@ const upgradesCol0 = [
     },
   ],
 ];
-//for column 2
-//upgrade to reduce the cost of run
-//pet tiers/ascenion?
 
 
 //Tabs
