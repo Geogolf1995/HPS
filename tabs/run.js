@@ -141,6 +141,20 @@ function updateRunButton() {
     hideId("runButtonEndMessage");
     hideId("runButtonRankupMessage");
   }
+  /*//check if user has finished running this rank
+  if (user.runCount>=ranks[user.rank].runReq) {
+    hideId("runButtonEndMessage");
+    //if so, hide the main and show the rankup message
+    hideId("runButtonMain");
+    showId("runButtonRankupMessage");
+    di("requiresRank").textContent = "Rank "+ranks[user.rank].nextName;
+  }
+  else {
+    hideId("runButtonEndMessage");
+    //otherwise hide the rankup message and show the main
+    hideId("runButtonRankupMessage");
+    showId("runButtonMain");
+  }*/
   //update html
   di("runCost").textContent = "-"+e(game.runTokenCost);
   di("runProgToEnergy").textContent = (user.runCount-prevRunReqToEnergy)+"/"+(energyTiers[game.energyTier].runReq-prevRunReqToEnergy);

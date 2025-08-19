@@ -142,10 +142,11 @@ for (let name in tabData) {
 var gameInterval, checksInterval;
 function runGameTime(ms) {
   //calculate time since last active tick
-  let thisUpdate = Date.now();
+  let thisUpdate = Date.now(),
+      lastUpdate = user.lastUpdate || Date.now();
   //maximum offline time defaults at 1 day
   if (typeof  ms=="undefined") {
-    ms = Math.min(thisUpdate-user.lastUpdate, 864e5)
+    ms = Math.min(thisUpdate-lastUpdate, 864e5)
   }
   let ticks = ms/1e3*tps;
   
@@ -203,10 +204,12 @@ function updateAll() {
   //bottom
 }
 function updateResources() {
+  /*if (logUpdates) {console.log("updateResources")}*/
   di("tokens").textContent = e(user.tokens);
   di("energy").textContent = e(user.energy);
 }
 function updateResourcesPerSec() {
+  /*if (logUpdates) {console.log("updateResourcesPerSec")}*/
   di("tokensPerSec").textContent = e(game.tokensPerSec);
 }
 function updateRank() {
@@ -299,13 +302,42 @@ function checkUnlocks() {
 }
 function checkAchievements() {
   //1: ABCs
-  if (!user.hasAchievements.includes("1") && user.hasPets.includes("CBA")) {giveAchievement("1")}
+  if (!user.hasAchievements.includes("1")) {
+    let hasPets = true;
+    for (let pet of "ABC") {
+      if (!user.hasPets.includes(pet)) {
+        hasPets = false;
+        break;
+      }
+    }
+    if (hasPets) {giveAchievement("1")}
+  }
   //2: That's It?
-  if (!user.hasAchievements.includes("2") && user.hasPets.includes("EDCBA")) {giveAchievement("2")}
+  if (!user.hasAchievements.includes("2")) {
+    let hasPets = true;
+    for (let pet of "ABCDE") {
+      if (!user.hasPets.includes(pet)) {
+        hasPets = false;
+        break;
+      }
+    }
+    if (hasPets) {giveAchievement("2")}
+  }
   //3: Rankup
   if (!user.hasAchievements.includes("3") && user.rank>0) {giveAchievement("3")}
   //4: Respect
   if (!user.hasAchievements.includes("4") && user.hasPets.includes("F")) {giveAchievement("4")}
+  //5: Now What?
+  if (!user.hasAchievements.includes("5")) {
+    let hasPets = true;
+    for (let pet of "FGHIJ") {
+      if (!user.hasPets.includes(pet)) {
+        hasPets = false;
+        break;
+      }
+    }
+    if (hasPets) {giveAchievement("5")}
+  }
 }
 
 
