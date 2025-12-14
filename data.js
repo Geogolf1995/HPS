@@ -367,7 +367,7 @@ const upgradesCol0 = [
       description: "",
       cost: Infinity,
       gain: 0,
-      reqRank: 3,
+      reqRank: 2,
     },
   ],
   [
@@ -485,3 +485,4 @@ const tabData = {
 function makeColoredPetSpan(pet) {
   return "<span class=\""+tierColors[game.pets[pet].tier]+"Text\">"+pet+"</span>";
 }
+
