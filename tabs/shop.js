@@ -79,6 +79,8 @@ function updateShop() {
   for (let name in game.pets) {
     //energy cost
     di("shopPetEnergyCost"+name).textContent = e(game.pets[name].energyCost);
+    //total energy cost
+    di("shopPetTotalEnergyCost"+name).textContent = e(game.pets[name].totalEnergyCost);
     //pet requirements
     //only put '-' in front if you need other pets to buy this one
     let reqStr = (game.pets[name].petReq)?"-":"",
