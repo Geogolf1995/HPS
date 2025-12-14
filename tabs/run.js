@@ -15,7 +15,6 @@ function runButton() {
       user.tokens-=game.runTokenCost;
       //increase run count
       user.runCount++;
-      user.totalRuns++;
       //check for new energy tier
       if (user.runCount>=energyTiers[game.energyTier].runReq) {
         game.energyTier++;
@@ -39,7 +38,6 @@ function energyButton() {
   //for safety, you could double check the user has run enough times
   //this could fix a bug or exploit later on
   if (true) {
-    user.totalEnergyResets++;
     //give energy
     user.energy+=energyTiers[game.energyTier].currentGain;
     //reset runs and tokens
