@@ -1,8 +1,9 @@
 //Update Messages
 const updateMessages = {
-  "v2.1": "- Added more upgrades for green letters<br>- Added 3 more blue letters<br>- Fixed 3 bugs",
-  "v2.0": "- Added upgrades for green letters<br>- Added 2 more letters<br>- Added 1 more achievement<br>- Fixed several color inconsistencies",
-  "v1.1": "- Added a changelog<br>- Added 1 achievement<br>- Several visual feedback improvements<br>- Fixed 2 bugs",
+  "v2.2": "- Now showing the total energy cost for all letters<br>- Added Rank II and related content<br>- Enhanced user feedback",
+  "v2.1": "- Added more upgrades for green letters<br>- Added more blue letters<br>- Fixed some bugs",
+  "v2.0": "- Added upgrades for green letters and related content<br>- Several visual improvements",
+  "v1.1": "- Added a changelog<br>- Added 1 achievement<br>- Several visual improvements<br>- Fixed some bugs",
 }
 
 
@@ -40,6 +41,15 @@ function updateVersion(loadUser) {
     loadUser.version = "v2.1";
     updated = true;
   }
+  if (loadUser.version=="v2.1") {
+    loadUser.version = "v2.2";
+    loadUser.upgradesCol1 = [0, 0, 0, 0, 0];
+    updated = true;
+  }
+  if (loadUser.version=="beta-1.0") {
+    //update beta releases
+    updated = true;
+  }//unused until I separate beta from public
   
   //load updated data into user
   user = JSON.parse(JSON.stringify(loadUser));
@@ -49,6 +59,7 @@ function updateVersion(loadUser) {
 }
 function initialization(updated) {
   //set game state based on user's progress
+  game = getNewGame();
   setGame();
   //simulate offline gains
   
@@ -69,35 +80,25 @@ function initialization(updated) {
   //send update message
   setTimeout(()=>{
     if (updated) {
-      let updateMessage = "";
-      for (let version in updateMessages) {
-        if (version == fromVersion) {break}
-        updateMessage+="<br>Version "+version+"<br>"+updateMessages[version]+"<br>";
-      }
-      alertify.alert("What's New:<br>"+updateMessage);
-      alertify.message("Loaded Version "+user.version);
-    }
-    else {
-      alertify.message("Loaded Version "+user.version);
+      showChangelog(fromVersion, true);
     }
   }, 1000);
 }
+
 function setGame() {
   //the order matters!
   
   //pets & shop
   for (let name in game.pets) {
+    //add visual pets
     if (user.hasPets.includes(name)) {
       addPet(name);
     }
     else {
       removePet(name);
     }
-    //add gain from 1st upgrade
-    if (game.pets[name].tier==0) {
-      
-    }
   }
+  setTotalPetCost();
   
   //run
   getRunCost();
@@ -120,7 +121,13 @@ function setGame() {
       game.pets[name].tokensPerSec+=gains[name];
     }
   }
-  
+  //column 1
+  for (let i=0; i<petsInTier.length; i++) {
+    let gains = getUpgradesCol1Gain(i);
+    for (let name in gains) {
+      game.pets[name].energyCost-=gains[name];
+    }
+  }
   
   //achievements
   getAchievementsTokensPerSec();
@@ -128,3 +135,18 @@ function setGame() {
   //resources
   getTokensPerSec();
 }
+function showChangelog(firstVersion, exclusive) {
+  let updateMessage = "";
+  if (firstVersion==latestVersion) {return}
+  for (let version in updateMessages) {
+    if (version==firstVersion && exclusive) {break}
+    updateMessage+="<br>Version "+version+"<br>"+updateMessages[version]+"<br>";
+    if (version==firstVersion) {break}
+  }
+  if (version!=latestVersion) {
+    alertify.alert("What's New:<br>"+updateMessage);
+  }
+}
+document.getElementById("version").parentElement.addEventListener("click", ()=>{
+  showChangelog("v"+latestVersion[1]+".0");
+});
