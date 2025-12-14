@@ -25,7 +25,7 @@ SOFTWARE.
 
 <html lang="en">
   <head>
-    <title>HPS</title>
+    <title>HPS alpha</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -137,11 +137,30 @@ SOFTWARE.
             <span style="font-size: 26px">Rankup to unlock more upgrades</span><br>
             <hr>
             <div class="tableRow" style="width: 100%; height: 100%">
-              <div id="upgradesColumn1">
+              <div id="upgradesColumn0">
                 <div style="height: 100px; position: relative">
                   <span class="chvt tokensIcon blueText" style="font-size: 50px">?</span>
                 </div>
                 <div id="upgradesButtonCon" class="upgradesButtonCon" style="display: none">
+                  <div class="upgradesButton cht tte" style="font-size: 20px; cursor: pointer">
+                    <span style="font-size: 30px">Title</span><br>
+                    <span class="ttc t" style="width: 250px; height: 75px; top: -87px; left: -5px">
+                      <span>Description</span><br>
+                      <span style="font-size: 18px">M+99 M+99 M+99 M+99 M+99</span>
+                    </span>
+                    <span><span>99</span>/<span>99</span></span><br>
+                    <span class="ch" style="bottom: 1px">-<span>999.99M</span> <span>?</span></span>
+                  </div>
+                  <div class="upgradesButton" style="border-color: var(--red); cursor: default; display: none">
+                    <span class="chvt" style="font-size: 30px">Requires Rank<br><span class="redText">VIII</span></span>
+                  </div>
+                </div>
+              </div>
+              <div id="upgradesColumn1">
+                <div style="height: 100px; position: relative">
+                  <span class="chvt energyIcon" style="font-size: 50px">?</span>
+                </div>
+                <!--<div class="upgradesButtonCon">
                   <div class="upgradesButton cht tte" style="font-size: 20px">
                     <span style="font-size: 30px">Title</span><br>
                     <span class="ttc t" style="width: 250px; height: 75px; top: -87px; left: -5px">
@@ -151,7 +170,7 @@ SOFTWARE.
                     <span><span>99</span>/<span>99</span></span><br>
                     <span class="blueText ch" style="bottom: 1px">-<span>999.99M</span> <span class="tokensIcon">?</span></span>
                   </div>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>
@@ -162,9 +181,10 @@ SOFTWARE.
             <div id="shopPetsCon" class="table">
               <div class="tableRow">
                 <div id="shopPet" class="shopPet tte" style="display: none">
-                  <span class="ttc t" style="width: 130px; height: 62px; top: -75px; left: -5px; font-size: 24px">
+                  <span class="ttc t" style="width: 130px; height: 92px; top: -105px; left: -5px; font-size: 24px">
                     <span class="yellowText">-<span>999.99M</span> <span class="energyIcon">?</span></span><br>
-                    <span style="font-size: 24px">-Z</span>
+                    <span style="font-size: 24px">-Z</span><br>
+                    <span class="yellowText" style="font-size: 18px">(<span>999.99M</span> <span class="energyIcon">?</span>)</span>
                   </span>
                   <span class="ch" style="top: 8px; font-size: 75px; font-weight: bold">Z</span><br>
                   <span class="ch" style="bottom: 5px; font-size: 20px; width: 100%"><span class="blueText">+<span>999.99M</span> <span class="tokensIcon">?</span></span>/s</span>
@@ -184,7 +204,7 @@ SOFTWARE.
     </div>
     <div id="infoTextCon" class="ch" style="position: fixed; bottom: 2px; z-index: 100">
       <span style="font-weight: bold; font-size: 20px">
-        <span class="infoText">Version <span id="version" style="color: var(--infoText)">99.9</span></span>
+        <span class="infoText">Version <span id="version" style="color: var(--infoText)">99.99</span></span>
          | 
         <span class="infoText" onmouseup="window.open('https://geogolf1995.github.io/HPS-Changelog/')">Changelog</span>
       </span>

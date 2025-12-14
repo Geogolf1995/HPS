@@ -16,6 +16,7 @@ let iconsInDoc = {
 for (let rss in iconsInDoc) {
   for (let el of iconsInDoc[rss]) {
     el.innerHTML = resources[rss].icon;
+    el.classList.add(resources[rss].color+"Text");
   }
 }
 //pets
@@ -32,7 +33,7 @@ for (let name in game.pets) {
   petSlot.style.display = "";
   di("petConLeft").appendChild(petSlot);
 }
-for (let name of /*rebirthPets*/"") {
+for (let name of "") {
   let petSlot = di("petSlot").cloneNode(true);
   petSlot.setAttribute("id", "petSlotR"+name);
   petSlot.style.display = "";
@@ -49,7 +50,7 @@ for (let num in achievements) {
   achChildren[2].setAttribute("id", "achDesc"+num);
   //update title and description
   achChildren[0].textContent = num;
-  achChildren[1].textContent = achievements[num].title;
+  achChildren[1].innerHTML = achievements[num].title;
   achChildren[2].textContent = achievements[num].description;
   //add new achievement to document
   ach.style.display = "";
@@ -74,6 +75,7 @@ for (let name in game.pets) {
       petTTChildren = petChildren[0].children;
   petTTChildren[0].firstElementChild.setAttribute("id", "shopPetEnergyCost"+name);
   petTTChildren[2].setAttribute("id", "shopPetPetCost"+name);
+  petTTChildren[4].firstElementChild.setAttribute("id", "shopPetTotalEnergyCost"+name);
   petChildren[3].firstElementChild.firstElementChild.setAttribute("id", "shopPetGain"+name);
   //color main button (not the tooltip)
   petChildren[1].classList.add(tierColors[game.pets[name].tier]+"Text");
@@ -91,6 +93,8 @@ for (let row in upgradesCol0) {
   let buttonConEl = di("upgradesButtonCon").cloneNode(true),
       buttonEl = buttonConEl.firstElementChild,
       buttonElChildren = buttonEl.children;
+  //id the buttonCon
+  buttonConEl.setAttribute("id", "upgradesButtonCon0-"+row);
   //id the button
   buttonEl.setAttribute("id", "upgradesButton0-"+row);
   buttonElChildren[0].setAttribute("id", "upgradesButtonTitle0-"+row);
@@ -100,14 +104,55 @@ for (let row in upgradesCol0) {
   buttonElChildren[5].firstElementChild.setAttribute("id", "upgradesButtonCost0-"+row);
   //add total levels, everything else changes depending on the upgrade's current level
   buttonElChildren[3].lastElementChild.textContent = upgradesCol0[row].length-1;
+  //set cost icon and color
+  buttonEl.lastElementChild.classList.add(resources.tokens.color+"Text");
+  buttonEl.lastElementChild.lastElementChild.innerHTML = resources.tokens.icon;
   //add functionality
   buttonEl.addEventListener("click", ()=>{
     buyUpgradeCol0(row);
   });
+  
+  //id rankupLock
+  let rankupLock = buttonConEl.lastElementChild;
+  rankupLock.setAttribute("id", "upgradesButtonRankupLock0-"+row);
+  rankupLock.firstElementChild.lastElementChild.setAttribute("id", "upgradesButtonRankupLockReqRank0-"+row);
+  
+  //add button to column
+  buttonConEl.style.display = "";
+  di("upgradesColumn0").appendChild(buttonConEl);
+}
+
+for (let row in upgradesCol1) {
+  let buttonConEl = di("upgradesButtonCon").cloneNode(true),
+      buttonEl = buttonConEl.firstElementChild,
+      buttonElChildren = buttonEl.children;
+  //id the button
+  buttonEl.setAttribute("id", "upgradesButton1-"+row);
+  buttonElChildren[0].setAttribute("id", "upgradesButtonTitle1-"+row);
+  buttonElChildren[2].firstElementChild.setAttribute("id", "upgradesButtonDescription1-"+row);
+  buttonElChildren[2].lastElementChild.setAttribute("id", "upgradesButtonGain1-"+row);
+  buttonElChildren[3].firstElementChild.setAttribute("id", "upgradesButtonLevel1-"+row);
+  buttonElChildren[5].firstElementChild.setAttribute("id", "upgradesButtonCost1-"+row);
+  //add total levels, everything else changes depending on the upgrade's current level
+  buttonElChildren[3].lastElementChild.textContent = upgradesCol1[row].length-1;
+  //set cost icon and color
+  buttonEl.lastElementChild.classList.add(resources.energy.color+"Text");
+  buttonEl.lastElementChild.lastElementChild.innerHTML = resources.energy.icon;
+  //add functionality
+  buttonEl.addEventListener("click", ()=>{
+    buyUpgradeCol1(row);
+  });
+  
+  //id rankupLock
+  let rankupLock = buttonConEl.lastElementChild;
+  rankupLock.setAttribute("id", "upgradesButtonRankupLock0-"+row);
+  rankupLock.firstElementChild.lastElementChild.setAttribute("id", "upgradesButtonRankupLockReqRank0-"+row);
+  
   //add button to column
   buttonConEl.style.display = "";
   di("upgradesColumn1").appendChild(buttonConEl);
 }
+
 //tab buttons
 for (let name in tabData) {
   let button = di("tabButton").cloneNode(true),
@@ -176,6 +221,21 @@ function getTokensPerSec() {
   let fromAchievements = game.achievementMulti;
   return game.tokensPerSec = 1+fromPets+game.achievementsTokensPerSec;
 }
+function setTotalPetCost() {
+  for (let name in game.pets) {
+    let totalCost = game.pets[name].energyCost;
+    function reccPetCosts(reccName) {
+      for (let i=game.pets[reccName].petReq.length-1; i>=0; i--) {
+        let checkPet = game.pets[reccName].petReq[i];
+        totalCost+=game.pets[checkPet].energyCost;
+        reccPetCosts(checkPet);
+      }
+    }
+    reccPetCosts(name);
+    
+    game.pets[name].totalEnergyCost = totalCost;
+  }
+}
 
 
 //Updates
@@ -204,10 +264,12 @@ function updateAll() {
   //bottom
 }
 function updateResources() {
+  /*if (logUpdates) {console.log("updateResources")}*/
   di("tokens").textContent = e(user.tokens);
   di("energy").textContent = e(user.energy);
 }
 function updateResourcesPerSec() {
+  /*if (logUpdates) {console.log("updateResourcesPerSec")}*/
   di("tokensPerSec").textContent = e(game.tokensPerSec);
 }
 function updateRank() {
@@ -277,6 +339,15 @@ function checkUnlocks() {
     showId("runProgToRankupCon");
   }
   else {hideId("runProgToRankupCon")}
+  //upgrades
+  if (user.rank>1) {
+    showId("upgradesButtonCon0-1");
+    showId("upgradesColumn1");
+  }
+  else {
+    hideId("upgradesButtonCon0-1");
+    hideId("upgradesColumn1");
+  }
   //tabs
   if (user.highestEnergyTier>0) {
     showId("optionsTabButton");
@@ -336,6 +407,8 @@ function checkAchievements() {
     }
     if (hasPets) {giveAchievement("5")}
   }
+  //6: Respect2
+  if (!user.hasAchievements.includes("6") && user.hasPets.includes("K")) {giveAchievement("6")}
 }
 
 
@@ -349,5 +422,6 @@ window.addEventListener("load", ()=>{
     checkUnlocks();
     checkAchievements();
   }, 1000/checkRate);
+  //other
 });
 console.log("skip to the new content with:", "loadGame(devUsers[latestVersion])");
