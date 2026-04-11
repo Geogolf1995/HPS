@@ -33,7 +33,7 @@ for (let name in game.pets) {
   petSlot.style.display = "";
   di("petConLeft").appendChild(petSlot);
 }
-for (let name of "") {
+for (let name of /*rebirthPets*/"") {
   let petSlot = di("petSlot").cloneNode(true);
   petSlot.setAttribute("id", "petSlotR"+name);
   petSlot.style.display = "";
@@ -116,6 +116,7 @@ for (let row in upgradesCol0) {
   let rankupLock = buttonConEl.lastElementChild;
   rankupLock.setAttribute("id", "upgradesButtonRankupLock0-"+row);
   rankupLock.firstElementChild.lastElementChild.setAttribute("id", "upgradesButtonRankupLockReqRank0-"+row);
+  rankupLock.lastElementChild.setAttribute("id", "upgradesButtonRankupLockMaxed0-"+row);
   
   //add button to column
   buttonConEl.style.display = "";
@@ -145,8 +146,9 @@ for (let row in upgradesCol1) {
   
   //id rankupLock
   let rankupLock = buttonConEl.lastElementChild;
-  rankupLock.setAttribute("id", "upgradesButtonRankupLock0-"+row);
-  rankupLock.firstElementChild.lastElementChild.setAttribute("id", "upgradesButtonRankupLockReqRank0-"+row);
+  rankupLock.setAttribute("id", "upgradesButtonRankupLock1-"+row);
+  rankupLock.firstElementChild.lastElementChild.setAttribute("id", "upgradesButtonRankupLockReqRank1-"+row);
+  rankupLock.lastElementChild.setAttribute("id", "upgradesButtonRankupLockMaxed1-"+row);
   
   //add button to column
   buttonConEl.style.display = "";
@@ -409,6 +411,19 @@ function checkAchievements() {
   }
   //6: Respect2
   if (!user.hasAchievements.includes("6") && user.hasPets.includes("K")) {giveAchievement("6")}
+  //7: It's Free
+  if (!user.hasAchievements.includes("7") && user.upgradesCol1[0]>=5) {giveAchievement("7")}
+  //8: Finally done... right?
+  if (!user.hasAchievements.includes("8")) {
+    let hasPets = true;
+    for (let pet of "KLMNO") {
+      if (!user.hasPets.includes(pet)) {
+        hasPets = false;
+        break;
+      }
+    }
+    if (hasPets) {giveAchievement("8")}
+  }
 }
 
 
@@ -421,7 +436,7 @@ window.addEventListener("load", ()=>{
   checksInterval = setInterval(()=>{
     checkUnlocks();
     checkAchievements();
-  }, 1000/checkRate);
+  }, 1e3/checkRate);
   //other
 });
 console.log("skip to the new content with:", "loadGame(devUsers[latestVersion])");

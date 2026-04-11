@@ -70,9 +70,6 @@ function removePet(name) {
 }
 
 
-//Calculate Costs and Gains
-
-
 //Update HTMl
 function updateShop() {
   if (logUpdates) {console.log("updateShop")}
@@ -80,6 +77,7 @@ function updateShop() {
     //energy cost
     di("shopPetEnergyCost"+name).textContent = e(game.pets[name].energyCost);
     //total energy cost
+    /*game.pets[name].totalEnergyCost = getTotalPetCost(name);*/
     di("shopPetTotalEnergyCost"+name).textContent = e(game.pets[name].totalEnergyCost);
     //pet requirements
     //only put '-' in front if you need other pets to buy this one
