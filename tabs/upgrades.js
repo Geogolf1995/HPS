@@ -38,6 +38,7 @@ function buyUpgradeCol1(row) {
       //updates
       setTotalPetCost();
       updateUpgradesCol1Button(row);
+      /*updateShop();*/
       if (logActions) {console.log("buyUpgradeCol1("+row+") > success")}
     }
     else if (logActions) {console.log("buyUpgradeCol1("+row+") > fail, user does not have enough energy")}
