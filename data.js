@@ -119,18 +119,18 @@ const devUsers = {
   },
   "v2.3": {
     //resources
-    tokens: 1e5,
-    energy: 1e4,
+    tokens: 0,
+    energy: 0,
     
     //pets & shop
-    hasPets: "ONMLKJIHGFEDCBA",
+    hasPets: "LKJIHGFEDCBA",
     
     //achievements
-    hasAchievements: ["1","2","3","4","5","6","7","8"],
+    hasAchievements: ["1","2","3","4","5","6","7"],
     
     //run
-    runCount: 33,
-    highestEnergyTier: 7,
+    runCount: 0,
+    highestEnergyTier: 6,
     rank: 2,
     
     //upgrades
