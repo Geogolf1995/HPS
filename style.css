@@ -137,6 +137,7 @@ hr {width: 100%}
 #petConLeft {
   height: 100%;
   width: 242px;
+  min-width: 242px;
   /*width: 16vw;*/
   border-right: 1px solid var(--border);
   display: flex;
@@ -150,6 +151,7 @@ hr {width: 100%}
 #petConRight {
   height: 100%;
   width: 242px;
+  min-width: 242px;
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: row;

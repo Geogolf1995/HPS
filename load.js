@@ -1,5 +1,6 @@
 //Update Messages
 const updateMessages = {
+  "v2.3": "- Added three more letters<br>- Yellow letters recieved a huge buff",
   "v2.2": "- Now showing the total energy cost for all letters<br>- Added Rank II and related content<br>- Enhanced user feedback",
   "v2.1": "- Added more upgrades for green letters<br>- Added more blue letters<br>- Fixed some bugs",
   "v2.0": "- Added upgrades for green letters and related content<br>- Several visual improvements",
@@ -46,10 +47,10 @@ function updateVersion(loadUser) {
     loadUser.upgradesCol1 = [0, 0, 0, 0, 0];
     updated = true;
   }
-  if (loadUser.version=="beta-1.0") {
-    //update beta releases
+  if (loadUser.version=="v2.2") {
+    loadUser.version = "v2.3";
     updated = true;
-  }//unused until I separate beta from public
+  }
   
   //load updated data into user
   user = JSON.parse(JSON.stringify(loadUser));
@@ -98,7 +99,6 @@ function setGame() {
       removePet(name);
     }
   }
-  setTotalPetCost();
   
   //run
   getRunCost();
@@ -128,6 +128,9 @@ function setGame() {
       game.pets[name].energyCost-=gains[name];
     }
   }
+  
+  //pets & shop again
+  setTotalPetCost();
   
   //achievements
   getAchievementsTokensPerSec();
