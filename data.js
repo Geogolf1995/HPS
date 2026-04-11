@@ -264,6 +264,8 @@ const runCosts = [
   2750, 3000, 3250, 3500,
   
   4000, 5000, 6000, 7000, 8000,
+  9120, 10240, 11360, 12480, 13600,
+  15200, 16800, 18400, 20000,
   
   Infinity,
 ];
@@ -277,8 +279,10 @@ const energyTiers = [
   {runReq: 28, currentGain: 130},
   
   {runReq: 33, currentGain: 160},
+  {runReq: 38, currentGain: 200},
+  {runReq: 42, currentGain: 300},
   
-  {runReq: Infinity, currentGain: 200},
+  {runReq: Infinity, currentGain: 400},
 ];
 const ranks = [
   {name: "0", nextName: "I", runReq: 14, tokenCost: 1e3, energyCost: 100},
