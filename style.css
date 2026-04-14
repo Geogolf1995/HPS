@@ -329,6 +329,9 @@ hr {width: 100%}
   text-align: center;
   transition: background-color .2s;
 }
+.shopPet:hover {
+  background-color: rgb(40,40,40);
+}
 
 /*Upgrades*/
 .upgradesButtonCon {
@@ -340,4 +343,20 @@ hr {width: 100%}
   border: 2px solid var(--purple);
   border-radius: 10px;
   position: relative;
+}
+
+/*Altar*/
+.altarPet {
+  width: 130px;
+  height: 130px;
+  border: 2px solid;
+  border-radius: 10px;
+  margin: 25px auto 25px auto;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  transition: background-color .2s;
+}
+.altarPet:hover {
+  background-color: rgb(40,40,40);
 }
