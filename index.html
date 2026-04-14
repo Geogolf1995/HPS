@@ -45,8 +45,9 @@ SOFTWARE.
     <script src="tabs/options.js" defer="defer"></script><!---->
     <script src="tabs/achievements.js" defer="defer"></script>
     <script src="tabs/run.js" defer="defer"></script>
-    <script src="tabs/upgrades.js" defer="defer"></script>
     <script src="tabs/shop.js" defer="defer"></script>
+    <script src="tabs/upgrades.js" defer="defer"></script>
+    <script src="tabs/altar.js" defer="defer"></script>
     <script src="tabs/rebirth.js" defer="defer"></script><!---->
     
     <!-- Initialization -->
@@ -78,6 +79,7 @@ SOFTWARE.
             <span class="ttc r" style="width: 110px; top: 0px; left: 81px; display: none">
               <span class="blueText" style="font-size: 17px">+<span>999.99M</span> <span class="tokensIcon">?</span></span>/s
             </span>
+            <span style="font-size: 24px; font-weight: bold; position: relative; left: 5px">00</span>
           </div>
         </div>
         <div id="tabsCon">
@@ -133,6 +135,24 @@ SOFTWARE.
             </div>
             <div id="runMultiCon"></div>
           </div>
+          <div id="shopTab" class="cht scroll" style="height: 100%">
+            <span style="font-size: 26px">Buy letters to increase <span class="tokensIcon blueText">?</span> production<br>Rankup to unlock more letters</span><br>
+            <span style="font-size: 16px; font-style: italic">You can also buy letters by pressing the appropriate letter on your keyboard</span>
+            <hr>
+            <div id="shopPetsCon" class="table">
+              <div class="tableRow">
+                <div id="shopPet" class="shopPet tte" style="display: none">
+                  <span class="ttc t" style="width: 130px; height: 92px; top: -105px; left: -5px; font-size: 24px">
+                    <span class="yellowText">-<span>999.99M</span> <span class="energyIcon">?</span></span><br>
+                    <span style="font-size: 24px">-Z</span><br>
+                    <span class="yellowText" style="font-size: 18px">(<span>999.99M</span> <span class="energyIcon">?</span>)</span>
+                  </span>
+                  <span class="ch" style="top: 8px; font-size: 75px; font-weight: bold">M</span><br>
+                  <span class="ch" style="bottom: 5px; font-size: 20px; width: 100%"><span class="blueText">+<span>999.99M</span> <span class="tokensIcon">?</span></span>/s</span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div id="upgradesTab" class="cht" style="margin-top: 5px">
             <span style="font-size: 26px">Rankup to unlock more upgrades</span><br>
             <hr>
@@ -161,22 +181,26 @@ SOFTWARE.
                   <span class="chvt energyIcon" style="font-size: 50px">?</span>
                 </div>
               </div>
+              <div id="upgradesColumn2">
+                <div style="height: 100px; position: relative">
+                  <span class="chvt energyIcon" style="font-size: 50px">?</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div id="shopTab" class="cht scroll" style="height: 100%">
-            <span style="font-size: 26px">Buy letters to increase <span class="tokensIcon blueText">?</span> production<br>Rankup to unlock more letters</span><br>
-            <span style="font-size: 16px; font-style: italic">You can also buy letters by pressing the appropriate letter on your keyboard</span>
+          <div id="altarTab" class="cht scroll" style="height: 100%">
+            <span style="font-size: 26px">Improve letters by reducing the quality of<br>letters sacrified upon purchase</span>
             <hr>
-            <div id="shopPetsCon" class="table">
+            <div id="altarUpgradesCon" class="table">
               <div class="tableRow">
-                <div id="shopPet" class="shopPet tte" style="display: none">
+                <div id="altarUpgrade" class="altarPet tte" style="display: none">
                   <span class="ttc t" style="width: 130px; height: 92px; top: -105px; left: -5px; font-size: 24px">
+                    <span class="blueText">-<span>999.99M</span> <span class="tokensIcon">?</span></span><br>
                     <span class="yellowText">-<span>999.99M</span> <span class="energyIcon">?</span></span><br>
-                    <span style="font-size: 24px">-Z</span><br>
-                    <span class="yellowText" style="font-size: 18px">(<span>999.99M</span> <span class="energyIcon">?</span>)</span>
+                    <span style="font-size: 20px">&#8594; <span>MMMMM</span></span>
                   </span>
-                  <span class="ch" style="top: 8px; font-size: 75px; font-weight: bold">Z</span><br>
-                  <span class="ch" style="bottom: 5px; font-size: 20px; width: 100%"><span class="blueText">+<span>999.99M</span> <span class="tokensIcon">?</span></span>/s</span>
+                  <span class="ch" style="top: 8px; font-size: 75px; font-weight: bold">M</span>
+                  <span class="ch" style="bottom: 5px; font-size: 20px; width: 100%">- MMMMM</span>
                 </div>
               </div>
             </div>

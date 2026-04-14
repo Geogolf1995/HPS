@@ -1,8 +1,9 @@
 //Buttons
 function buyPet(name) {
   if (logActions) {console.log("user > buyPet("+name+")")}
-  //check if user does not already have this pet
-  if (!user.hasPets.includes(name)) {
+  //check if user has not reached the pet count limit
+  let count = user.hasPets.split(name).length-1;
+  if (count<game.pets[name].maxCount) {
     //check if user is a high enough rank
     if (user.rank>=game.pets[name].tier) {
       //check if user can afford the pet
@@ -24,6 +25,7 @@ function buyPet(name) {
           }
           //give pet
           givePet(name);
+          updatePets();
           if (logActions) {console.log("buyPet("+name+") > success")}
         }
         else if (logActions) {console.log("buyPet("+name+") > fail, user does not have the required pets")}
@@ -38,8 +40,9 @@ function buyPet(name) {
 //changes user data
 function givePet(name) {
   if (logActions) {console.log("givePet("+name+")")}
-  //check if user does not have this pet
-  if (!user.hasPets.includes(name)) {
+  //check if user has not reached the pet count limit
+  let count = user.hasPets.split(name).length-1;
+  if (count<game.pets[name].maxCount) {
     user.hasPets+=name;
     //add pet to UI
     addPet(name);
@@ -52,8 +55,12 @@ function takePet(name) {
   //check if user has this pet
   if (user.hasPets.includes(name)) {
     user.hasPets = user.hasPets.replace(name, "");
-    //remove pet from UI
-    removePet(name);
+    //check if user has only one of this pet
+    let count = user.hasPets.split(name).length-1;
+    if (count==0) {
+      //remove pet from UI
+      removePet(name);
+    }
     if (logActions) {console.log("takePet("+name+") > success")}
   }
   else if (logActions) {console.log("takePet("+name+") > fail, user does not have this pet")}
@@ -70,6 +77,21 @@ function removePet(name) {
 }
 
 
+//Calculate Costs and Gains
+/*function getTotalPetCost(name) {
+  let totalCost = game.pets[name].energyCost;
+  function reccPetCosts(reccName) {
+    for (let i=game.pets[reccName].petReq.length-1; i>=0; i--) {
+      let checkPet = game.pets[reccName].petReq[i];
+      totalCost+=game.pets[checkPet].energyCost;
+      reccPetCosts(checkPet);
+    }
+  }
+  reccPetCosts(name);
+  return totalCost;
+}*/
+
+
 //Update HTMl
 function updateShop() {
   if (logUpdates) {console.log("updateShop")}
@@ -77,7 +99,6 @@ function updateShop() {
     //energy cost
     di("shopPetEnergyCost"+name).textContent = e(game.pets[name].energyCost);
     //total energy cost
-    /*game.pets[name].totalEnergyCost = getTotalPetCost(name);*/
     di("shopPetTotalEnergyCost"+name).textContent = e(game.pets[name].totalEnergyCost);
     //pet requirements
     //only put '-' in front if you need other pets to buy this one

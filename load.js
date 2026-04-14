@@ -1,5 +1,6 @@
 //Update Messages
 const updateMessages = {
+  "v2.4": "- Added rank III and related content<br>- Added altar upgrades<br>- Some energy rewards have been increased",
   "v2.3": "- Added three more letters<br>- Yellow letters recieved a huge buff",
   "v2.2": "- Now showing the total energy cost for all letters<br>- Added Rank II and related content<br>- Enhanced user feedback",
   "v2.1": "- Added more upgrades for green letters<br>- Added more blue letters<br>- Fixed some bugs",
@@ -51,6 +52,18 @@ function updateVersion(loadUser) {
     loadUser.version = "v2.3";
     updated = true;
   }
+  if (loadUser.version=="v2.3") {
+    loadUser.version = "v2.4";
+    loadUser.upgradesCol2 = [0, 0, 0, 0, 0],
+    loadUser.altarUpgrades = {
+      A:0,B:0,C:0,D:0,E:0,F:0,G:0,H:0,I:0,J:0,K:0,L:0,M:0,N:0,O:0,P:0,Q:0,R:0,S:0,T:0,U:0,V:0,W:0,X:0,Y:0,Z:0
+    }
+    updated = true;
+  }
+  if (loadUser.version=="beta-1.0") {
+    //update beta releases
+    updated = true;
+  }//unused until I separate beta from public
   
   //load updated data into user
   user = JSON.parse(JSON.stringify(loadUser));
@@ -115,7 +128,7 @@ function setGame() {
   //upgrades
   //column 0
   for (let i=0; i<petsInTier.length; i++) {
-    let gains = getUpgradesCol0Gain(i);
+    let gains = getUpgradesGain(0, i);
     for (let j=0; j<petsInTier[i].length; j++) {
       let name = petsInTier[i][j];
       game.pets[name].tokensPerSec+=gains[name];
@@ -123,9 +136,23 @@ function setGame() {
   }
   //column 1
   for (let i=0; i<petsInTier.length; i++) {
-    let gains = getUpgradesCol1Gain(i);
+    let gains = getUpgradesGain(1, i);
     for (let name in gains) {
       game.pets[name].energyCost-=gains[name];
+    }
+  }
+  //column 2
+  for (let i=0; i<petsInTier.length; i++) {
+    let gains = getUpgradesGain(2, i);
+    for (let name in gains) {
+      game.pets[name].maxCount+=gains[name];
+    }
+  }
+  
+  //altar
+  for (let name in altarUpgrades) {
+    if (user.altarUpgrades[name]>0) {
+      game.pets[name].petReq = altarUpgrades[name][user.altarUpgrades[name]-1].nextReq;
     }
   }
   
