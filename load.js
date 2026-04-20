@@ -1,8 +1,9 @@
 //Update Messages
 const updateMessages = {
+  "v2.5": "- Added ranks IV-VI and related content<br>- Fixed some bugs",
   "v2.4": "- Added rank III and related content<br>- Added altar upgrades<br>- Some energy rewards have been increased",
   "v2.3": "- Added three more letters<br>- Yellow letters recieved a huge buff",
-  "v2.2": "- Now showing the total energy cost for all letters<br>- Added Rank II and related content<br>- Enhanced user feedback",
+  "v2.2": "- Added Rank II and related content<br>- Now showing the total energy cost for all letters<br>- Enhanced user feedback",
   "v2.1": "- Added more upgrades for green letters<br>- Added more blue letters<br>- Fixed some bugs",
   "v2.0": "- Added upgrades for green letters and related content<br>- Several visual improvements",
   "v1.1": "- Added a changelog<br>- Added 1 achievement<br>- Several visual improvements<br>- Fixed some bugs",
@@ -30,7 +31,6 @@ function loadGame(importedUser) {
 function updateVersion(loadUser) {
   let updated = false;
   //for when localStorage is added
-  //load from latest public release into beta releases (later)
   if (loadUser.version=="v1.0") {
     loadUser.version = "v1.1";
   }
@@ -60,11 +60,13 @@ function updateVersion(loadUser) {
     }
     updated = true;
   }
-  if (loadUser.version=="beta-1.0") {
-    //update beta releases
+  if (loadUser.version=="v2.4") {
+    loadUser.version = "v2.5";
     updated = true;
-  }//unused until I separate beta from public
+  }
   
+  //if user does not have a last update time, set the time to now
+  if (loadUser.lastUpdate===null) {loadUser.lastUpdate = Date.now()}
   //load updated data into user
   user = JSON.parse(JSON.stringify(loadUser));
   console.log("Version "+loadUser.version+" loaded successfully");

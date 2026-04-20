@@ -80,7 +80,10 @@ function getUpgradesGain(col, row) {
       gains[name] = 0;
       //add the gain every nth level up to the user's current level, where n is the number of pets in this tier
       for (let j=i; j<userLevel && j<upgrades[0][row].length; j+=interval) {
-        gains[name]+=upgrades[0][row][j].gain;
+        //if user is a high enough rank
+        if (user.rank>=upgrades[0][row][j].reqRank) {
+          gains[name]+=upgrades[0][row][j].gain;
+        }
       }
     }
     //return object of upgrade gains
@@ -98,7 +101,10 @@ function getUpgradesGain(col, row) {
     for (let i=0; i<userLevel; i++) {
       let affectedPet = upgrades[1][row][i].affectedPet,
           gain = upgrades[1][row][i].gain;
-      gains[affectedPet]+=gain;
+      //if user is a high enough rank
+      if (user.rank>=upgrades[1][row][i].reqRank) {
+        gains[affectedPet]+=gain;
+      }
     }
     return gains;
   }
@@ -114,14 +120,17 @@ function getUpgradesGain(col, row) {
       gains[name] = 0;
       //add the gain every nth level up to the user's current level, where n is the number of pets in this tier
       for (let j=i; j<userLevel && j<upgrades[2][row].length; j+=interval) {
-        gains[name]+=upgrades[2][row][j].gain;
+        //if user is a high enough rank
+        if (user.rank>=upgrades[2][row][j].reqRank) {
+          gains[name]+=upgrades[2][row][j].gain;
+        }
       }
     }
     return gains;
   }
 }
 
-function getUpgradesCol0Gain(row) {
+/*function getUpgradesCol0Gain(row) {
   let userLevel = user.upgradesCol0[row],
       interval = petsInTier[row].length,
       gains = {};
@@ -154,7 +163,7 @@ function getUpgradesCol1Gain(row) {
     gains[affectedPet]+=gain;
   }
   return gains;
-}
+}*/
 
 
 //Update HTML
