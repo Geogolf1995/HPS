@@ -51,7 +51,7 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v1.0",
   },
   "v2.0": {
@@ -72,7 +72,7 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v1.1",
   },
   "v2.1": {
@@ -96,7 +96,7 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v2.0",
   },
   "v2.2": {
@@ -120,7 +120,7 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v2.1",
   },
   "v2.3": {
@@ -145,7 +145,7 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v2.2",
   },
   "v2.4": {
@@ -170,14 +170,53 @@ const devUsers = {
     
     //other
     tab: "run",
-    lastUpdate: Date.now(),
+    lastUpdate: null,
     version: "v2.3",
   },
+  "v2.5": {
+    //resources
+    tokens: 1e6,
+    energy: 100e3,
+    
+    //pets & shop
+    hasPets: "TSRQPONMLKJIHGFEDCBAAAAABBBBCCCCDDDDEEEE",
+    
+    //achievements
+    hasAchievements: ["1","2","3","4","5","6","7","8","9","10","11"],
+    
+    //run
+    runCount: 56,
+    highestEnergyTier: 12,
+    rank: 3,
+    
+    //upgrades
+    upgradesCol0: [15, 10, 5, 0, 0],
+    upgradesCol1: [9, 0, 0, 0, 0],
+    upgradesCol2: [5, 0, 0, 0, 0],
+    
+    //altar upgrades
+    altarUpgrades: {
+      A:0,B:1,C:2,D:3,E:4,F:0,G:0,H:0,I:0,J:0,K:0,L:0,M:0,N:0,O:0,P:5,Q:5,R:5,S:5,T:5,U:0,V:0,W:0,X:0,Y:0,Z:0
+    },
+    
+    //other
+    tab: "run",
+    lastUpdate: null,
+    version: "v2.5",
+  },
 }
+
 function getNewGame() {
   return {
     //resources
     tokensPerSec: 1,
+    
+    //achievements
+    achievementsTokensPerSec: 0,
+    
+    //run
+    runTokenCost: 1,
+    energyTier: 0,
     
     //pets & shop
     pets: {
@@ -201,22 +240,15 @@ function getNewGame() {
       R: {tier: 3, energyCost: 7500, petReq: "KLMNOQ", tokensPerSec: 4500, maxCount: 1},
       S: {tier: 3, energyCost: 8750, petReq: "KLMNOR", tokensPerSec: 6000, maxCount: 1},
       T: {tier: 3, energyCost: 10000, petReq: "KLMNOS", tokensPerSec: 7500, maxCount: 1},
-      /*U: {tier: 4, energyCost: 21, petReq: "PQRST", tokensPerSec: 21, maxCount: 1},
-      /*V: {tier: 4, energyCost: 22, petReq: "PQRSTU", tokensPerSec: 22, maxCount: 1},
-      /*W: {tier: 4, energyCost: 23, petReq: "PQRSTV", tokensPerSec: 23, maxCount: 1},
-      /*X: {tier: 4, energyCost: 24, petReq: "PQRSTW", tokensPerSec: 24, maxCount: 1},*/
+      U: {tier: 4, energyCost: 50000, petReq: "PQRST", tokensPerSec: 15000, maxCount: 1},
+      V: {tier: 4, energyCost: 75000, petReq: "PQRSTU", tokensPerSec: 25000, maxCount: 1},
+      W: {tier: 4, energyCost: 100000, petReq: "PQRSTV", tokensPerSec: 35000, maxCount: 1},
+      X: {tier: 4, energyCost: 150000, petReq: "PQRSTW", tokensPerSec: 45000, maxCount: 1},
     },
-    
-    //achievements
-    achievementsTokensPerSec: 0,
-    
-    //run
-    runTokenCost: 1,
-    energyTier: 0,
   }
 }
 var game = getNewGame();
-const latestVersion = "v2.4";
+const latestVersion = "v2.5";
 
 
 //Do not change
@@ -225,7 +257,7 @@ const checkRate = 10;
 
 
 //debugging
-const logActions = true;
+const logActions = false;
 const logUpdates = false;
 
 
@@ -282,6 +314,9 @@ const achievements = [
   {title: "Respect<sup>3</sup>", description: "Buy the first purple letter"},
   {title: "Will this ever end?", description: "Buy all purple letters"},
   {title: "It's getting easier", description: "Buy an upgrade from the altar"},
+  {title: "Final Respect", description: "Buy the first red letter"},
+  {title: "Finally the end", description: "Buy all red letters"},
+  {title: "They're all free!", description: "Reduce the cost of all green letters until they are free and sacrifice no letters"},
 ];
 const hasAchColor = "rgb(25,85,25)";
 const hasAchIdColor = "rgb(75,125,25,0.75)"
@@ -307,6 +342,11 @@ const runCosts = [
   40e3, 47.5e3, 55e3, 62.5e3, 70e3,
   85e3, 95e3, 105e3, 115e3,
   
+  130e3, 165e3, 200e3, 235e3, 270e3,
+  300e3, 350e3, 400e3, 450e3, 500e3,
+  550e3, 625e3, 700e3, 775e3, 850e3,
+  /*1e6, 1.125e6, 1.25e6, 1.375e6, 1.5e6,*/
+  
   Infinity,
 ];
 const energyTiers = [
@@ -326,13 +366,21 @@ const energyTiers = [
   {runReq: 52, currentGain: 1350},
   {runReq: 56, currentGain: 2250},
   
-  {runReq: Infinity, currentGain: 3150},
+  {runReq: 61, currentGain: 3150},
+  {runReq: 66, currentGain: 5000},
+  {runReq: 71, currentGain: 7500},
+  /*{runReq: 75, currentGain: 12500},*/
+  
+  {runReq: Infinity, currentGain: 12500/*20000*/},
 ];
 const ranks = [
   {name: "0", nextName: "I", runReq: 14, tokenCost: 1e3, energyCost: 100},
   {name: "I", nextName: "II", runReq: 28, tokenCost: 10e3, energyCost: 1e3},
   {name: "II", nextName: "III", runReq: 42, tokenCost: 100e3, energyCost: 10e3},
-  {name: "III", nextName: "End", runReq: Infinity, tokenCost: Infinity, energyCost: Infinity},
+  {name: "III", nextName: "IV", runReq: 56, tokenCost: 1e6, energyCost: 100e3},
+  {name: "IV", nextName: "V", runReq: 61, tokenCost: 5e6, energyCost: 100e3},
+  {name: "V", nextName: "VI", runReq: 66, tokenCost: 10e6, energyCost: 100e3},
+  {name: "VI", nextName: "End", runReq: Infinity, tokenCost: Infinity, energyCost: Infinity},
 ];
 
 
@@ -345,6 +393,7 @@ const upgradesIcons = [
 const upgrades = [
   [
     [
+      //rank 1
       {
         title: "Better "+makeColoredPetSpan(petsInTier[0][0]),
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
@@ -370,7 +419,7 @@ const upgrades = [
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
         cost: 5e3, gain: 5, reqRank: 1,
       },
-      
+      //rank 2
       {
         title: "Even Better "+makeColoredPetSpan(petsInTier[0][0]),
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
@@ -396,7 +445,7 @@ const upgrades = [
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
         cost: 17.5e3, gain: 10, reqRank: 2,
       },
-      
+      //rank 3
       {
         title: "Much Better "+makeColoredPetSpan(petsInTier[0][0]),
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
@@ -422,16 +471,69 @@ const upgrades = [
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
         cost: 500e3, gain: 25, reqRank: 3,
       },
+      //rank 4
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[0][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
+        cost: 1e6, gain: 10, reqRank: 4,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[0][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][1])+" by ",
+        cost: 1.25e6, gain: 20, reqRank: 4,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[0][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][2])+" by ",
+        cost: 1.5e6, gain: 30, reqRank: 4,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[0][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
+        cost: 1.75e6, gain: 40, reqRank: 4,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[0][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
+        cost: 2e6, gain: 50, reqRank: 4,
+      },
+      //rank 5
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[0][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
+        cost: 2.25e6, gain: 21, reqRank: 5,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[0][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][1])+" by ",
+        cost: 2.5e6, gain: 37, reqRank: 5,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[0][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][2])+" by ",
+        cost: 2.75e6, gain: 42, reqRank: 5,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[0][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
+        cost: 3e6, gain: 47, reqRank: 5,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[0][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
+        cost: 3.5e6, gain: 51, reqRank: 5,
+      },
       
       {
         title: "Maxed",
         description: "",
         cost: Infinity,
         gain: 0,
-        reqRank: 3,
+        reqRank: 5,
       },
-    ],
+    ],//maxed
     [
+      //rank 2
       {
         title: "Better "+makeColoredPetSpan(petsInTier[1][0]),
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
@@ -457,7 +559,7 @@ const upgrades = [
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
         cost: 40e3, gain: 9, reqRank: 2,
       },
-      
+      //rank 3
       {
         title: "Even Better "+makeColoredPetSpan(petsInTier[1][0]),
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
@@ -483,16 +585,95 @@ const upgrades = [
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
         cost: 1e6, gain: 27, reqRank: 3,
       },
+      //rank 4
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
+        cost: 1.5e6, gain: 35, reqRank: 4,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
+        cost: 2.25e6, gain: 45, reqRank: 4,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
+        cost: 3e6, gain: 55, reqRank: 4,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
+        cost: 3.75e6, gain: 65, reqRank: 4,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
+        cost: 4.5e6, gain: 75, reqRank: 4,
+      },
+      //rank 5
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
+        cost: 5e6, gain: 50, reqRank: 5,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
+        cost: 5.625e6, gain: 63, reqRank: 5,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
+        cost: 6.25e6, gain: 75, reqRank: 5,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
+        cost: 6.875e6, gain: 88, reqRank: 5,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
+        cost: 7.5e6, gain: 100, reqRank: 5,
+      },
+      //rank 6
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
+        cost: 8e6, gain: 80, reqRank: 6,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
+        cost: 9e6, gain: 98, reqRank: 6,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
+        cost: 10e6, gain: 116, reqRank: 6,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
+        cost: 11e6, gain: 133, reqRank: 6,
+      },
+      {
+        title: "The Best "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
+        cost: 12e6, gain: 149, reqRank: 6,
+      },
       
       {
         title: "Maxed",
         description: "",
         cost: Infinity,
         gain: 0,
-        reqRank: 3,
+        reqRank: 6,
       },
-    ],
+    ],//maxed
     [
+      //rank 3
       {
         title: "Better "+makeColoredPetSpan(petsInTier[2][0]),
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][0])+" by ",
@@ -518,200 +699,669 @@ const upgrades = [
         description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][4])+" by ",
         cost: 1.5e6, gain: 100, reqRank: 3,
       },
+      //rank 4
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][0])+" by ",
+        cost: 2e6, gain: 120, reqRank: 4,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][1])+" by ",
+        cost: 3e6, gain: 140, reqRank: 4,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][2])+" by ",
+        cost: 4e6, gain: 160, reqRank: 4,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][3])+" by ",
+        cost: 5e6, gain: 180, reqRank: 4,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][4])+" by ",
+        cost: 6e6, gain: 200, reqRank: 4,
+      },
+      //rank 5
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][0])+" by ",
+        cost: 7.5e6, gain: 200, reqRank: 5,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][1])+" by ",
+        cost: 8.75e6, gain: 230, reqRank: 5,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][2])+" by ",
+        cost: 10e6, gain: 260, reqRank: 5,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][3])+" by ",
+        cost: 11.25e6, gain: 290, reqRank: 5,
+      },
+      {
+        title: "Much Better "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][4])+" by ",
+        cost: 12.5e6, gain: 320, reqRank: 5,
+      },
+      //rank 6
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][0])+" by ",
+        cost: 15e6, gain: 400, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][1])+" by ",
+        cost: 17.5e6, gain: 500, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][2])+" by ",
+        cost: 20e6, gain: 600, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][3])+" by ",
+        cost: 22.5e6, gain: 700, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[2][4])+" by ",
+        cost: 25e6, gain: 800, reqRank: 6,
+      },
       
       {
         title: "Maxed",
         description: "",
         cost: Infinity,
         gain: 0,
-        reqRank: 3,
+        reqRank: 7,
+      },
+    ],
+    [
+      //rank 4
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[3][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][0])+" by ",
+        cost: 3e6, gain: 150, reqRank: 4,
+      },
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[3][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][1])+" by ",
+        cost: 4.5e6, gain: 300, reqRank: 4,
+      },
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[3][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][2])+" by ",
+        cost: 6e6, gain: 450, reqRank: 4,
+      },
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[3][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][3])+" by ",
+        cost: 7.5e6, gain: 600, reqRank: 4,
+      },
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[3][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][4])+" by ",
+        cost: 9e6, gain: 750, reqRank: 4,
+      },
+      //rank 5
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[3][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][0])+" by ",
+        cost: 10e6, gain: 300, reqRank: 5,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[3][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][1])+" by ",
+        cost: 12.5e6, gain: 600, reqRank: 5,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[3][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][2])+" by ",
+        cost: 15e6, gain: 900, reqRank: 5,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[3][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][3])+" by ",
+        cost: 17.5e6, gain: 1200, reqRank: 5,
+      },
+      {
+        title: "Even Better "+makeColoredPetSpan(petsInTier[3][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][4])+" by ",
+        cost: 20e6, gain: 1500, reqRank: 5,
+      },
+      //rank 6
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[3][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][0])+" by ",
+        cost: 20e6, gain: 500, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[3][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][1])+" by ",
+        cost: 25e6, gain: 1000, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[3][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][2])+" by ",
+        cost: 30e6, gain: 1500, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[3][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][3])+" by ",
+        cost: 35e6, gain: 2000, reqRank: 6,
+      },
+      {
+        title: "Way Better "+makeColoredPetSpan(petsInTier[3][4]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[3][4])+" by ",
+        cost: 40e6, gain: 2500, reqRank: 6,
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 6,
+      },
+    ],
+    [
+      //rank 5
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[4][0]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[4][0])+" by ",
+        cost: 15e6, gain: 3000, reqRank: 5,
+        affectedPet: petsInTier[4][0],
+      },
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[4][1]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[4][1])+" by ",
+        cost: 20e6, gain: 6000, reqRank: 5,
+        affectedPet: petsInTier[4][1],
+      },
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[4][2]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[4][2])+" by ",
+        cost: 25e6, gain: 9000, reqRank: 5,
+        affectedPet: petsInTier[4][2],
+      },
+      {
+        title: "Better "+makeColoredPetSpan(petsInTier[4][3]),
+        description: "Increase the production<br>of "+makeColoredPetSpan(petsInTier[4][3])+" by ",
+        cost: 30e6, gain: 12000, reqRank: 5,
+        affectedPet: petsInTier[4][3],
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 5,
       },
     ],
   ],
   [
     [
+      //rank 2
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
         cost: 130, gain: 4, reqRank: 2,
         affectedPet: petsInTier[0][4],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[0][3]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
         cost: 170, gain: 3, reqRank: 2,
         affectedPet: petsInTier[0][3],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[0][2]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][2])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][2])+" by ",
         cost: 210, gain: 2, reqRank: 2,
         affectedPet: petsInTier[0][2],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[0][1]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][1])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][1])+" by ",
         cost: 250, gain: 1, reqRank: 2,
         affectedPet: petsInTier[0][1],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[0][0]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
+        description: "Lower the <br>ost of "+makeColoredPetSpan(petsInTier[0][0])+" by ",
         cost: 300, gain: 1, reqRank: 2,
         affectedPet: petsInTier[0][0],
       },
-      
+      //rank 3
       {
         title: "Even Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
         cost: 500, gain: 4, reqRank: 3,
         affectedPet: petsInTier[0][4],
       },
       {
         title: "Even Cheaper "+makeColoredPetSpan(petsInTier[0][3]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
         cost: 650, gain: 3, reqRank: 3,
         affectedPet: petsInTier[0][3],
       },
       {
-        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[0][2]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][2])+" by ",
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[0][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][2])+" by ",
         cost: 800, gain: 3, reqRank: 3,
         affectedPet: petsInTier[0][2],
       },
       {
-        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[0][1]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][1])+" by ",
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[0][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][1])+" by ",
         cost: 950, gain: 1, reqRank: 3,
         affectedPet: petsInTier[0][1],
       },
-      
-      /*{
-        title: "Cheaper "+makeColoredPetSpan(petsInTier[0][3]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
-        cost: 450,
-        gain: 4,
-        reqRank: 4,
+      //rank 4
+      {
+        title: "Much Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
+        cost: 1000, gain: 5, reqRank: 4,
+        affectedPet: petsInTier[0][4],
+      },
+      {
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[0][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[0][3])+" by ",
+        cost: 2000, gain: 4, reqRank: 4,
         affectedPet: petsInTier[0][3],
       },
+      //rank 5
       {
-        title: "Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
+        title: "Way Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
         description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
-        cost: 600,
-        gain: 5,
-        reqRank: 4,
-        affectedPet: petsInTier[0][4],
-      },
-      
-      {
-        title: "Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
-        cost: 650,
-        gain: 5,
-        reqRank: 5,
+        cost: 2333, gain: 5, reqRank: 5,
         affectedPet: petsInTier[0][4],
       },
       {
-        title: "Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
+        title: "Way Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
         description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
-        cost: 700,
-        gain: 6,
-        reqRank: 5,
+        cost: 3667, gain: 6, reqRank: 5,
         affectedPet: petsInTier[0][4],
       },
       {
-        title: "Cheaper "+makeColoredPetSpan(petsInTier[0][4]),
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[0][4]),
         description: "Lower the cost of "+makeColoredPetSpan(petsInTier[0][4])+" by ",
-        cost: 900,
-        gain: 8,
-        reqRank: 5,
+        cost: 5000, gain: 8, reqRank: 5,
         affectedPet: petsInTier[0][4],
-      },*/
+      },
       
       {
         title: "Maxed",
         description: "",
         cost: Infinity,
         gain: 0,
-        reqRank: 3,
+        reqRank: 5,
         affectedPet: petsInTier[0][0],
       },
-    ],
+    ],//maxed
     [
+      //rank 3
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[1][4]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
         cost: 1e3, gain: 60, reqRank: 3,
         affectedPet: petsInTier[1][4],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[1][3]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
         cost: 2e3, gain: 45, reqRank: 3,
         affectedPet: petsInTier[1][3],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[1][2]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
         cost: 3e3, gain: 45, reqRank: 3,
         affectedPet: petsInTier[1][2],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[1][1]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
         cost: 4e3, gain: 20, reqRank: 3,
         affectedPet: petsInTier[1][1],
       },
       {
         title: "Cheaper "+makeColoredPetSpan(petsInTier[1][0]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
         cost: 5e3, gain: 10, reqRank: 3,
         affectedPet: petsInTier[1][0],
       },
-      
-      /*{
+      //rank 4
+      {
         title: "Even Cheaper "+makeColoredPetSpan(petsInTier[1][4]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
-        cost: 1e3, gain: 175-115,60 (100), reqRank: 4,
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
+        cost: 3e3, gain: 115, reqRank: 4,
         affectedPet: petsInTier[1][4],
       },
       {
         title: "Even Cheaper "+makeColoredPetSpan(petsInTier[1][3]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
-        cost: 2e3, gain: 140-90-45 (75), reqRank: 4,
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
+        cost: 6e3, gain: 90, reqRank: 4,
         affectedPet: petsInTier[1][3],
       },
       {
         title: "Even Cheaper "+makeColoredPetSpan(petsInTier[1][2]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
-        cost: 3e3, gain: 90-65-45 (50), reqRank: 4,
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
+        cost: 9e3, gain: 65, reqRank: 4,
         affectedPet: petsInTier[1][2],
       },
       {
         title: "Even Cheaper "+makeColoredPetSpan(petsInTier[1][1]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
-        cost: 4e3, gain: 60-40-20 (30), reqRank: 4,
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
+        cost: 12e3, gain: 40, reqRank: 4,
         affectedPet: petsInTier[1][1],
       },
       {
         title: "Even Cheaper "+makeColoredPetSpan(petsInTier[1][0]),
-        description: "Lower the cost of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
-        cost: 4e3, gain: 30-20-10 (10), reqRank: 4,
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
+        cost: 15e3, gain: 20, reqRank: 4,
         affectedPet: petsInTier[1][0],
-      },*/
+      },
+      //rank 5
+      {
+        title: "Much Cheaper "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
+        cost: 5e3, gain: 175, reqRank: 5,
+        affectedPet: petsInTier[1][4],
+      },
+      {
+        title: "Much Cheaper "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
+        cost: 10e3, gain: 140, reqRank: 5,
+        affectedPet: petsInTier[1][3],
+      },
+      {
+        title: "Much Cheaper "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
+        cost: 15e3, gain: 90, reqRank: 5,
+        affectedPet: petsInTier[1][2],
+      },
+      {
+        title: "Much Cheaper "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
+        cost: 20e3, gain: 60, reqRank: 5,
+        affectedPet: petsInTier[1][1],
+      },
+      {
+        title: "Much Cheaper "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
+        cost: 25e3, gain: 30, reqRank: 5,
+        affectedPet: petsInTier[1][0],
+      },
+      //rank 6
+      {
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][4])+" by ",
+        cost: 10e3, gain: 100, reqRank: 6,
+        affectedPet: petsInTier[1][4],
+      },
+      {
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][3])+" by ",
+        cost: 15e3, gain: 75, reqRank: 6,
+        affectedPet: petsInTier[1][3],
+      },
+      {
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][2])+" by ",
+        cost: 20e3, gain: 50, reqRank: 6,
+        affectedPet: petsInTier[1][2],
+      },
+      {
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][1])+" by ",
+        cost: 25e3, gain: 30, reqRank: 6,
+        affectedPet: petsInTier[1][1],
+      },
+      {
+        title: "The Cheapest "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[1][0])+" by ",
+        cost: 30e3, gain: 10, reqRank: 6,
+        affectedPet: petsInTier[1][0],
+      },
       
       {
         title: "Maxed",
         description: "",
         cost: Infinity,
         gain: 0,
-        reqRank: 3,
+        reqRank: 6,
+        affectedPet: petsInTier[0][0],
+      },
+    ],//maxed
+    [
+      //rank 4
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][4])+" by ",
+        cost: 5e3, gain: 600, reqRank: 4,
+        affectedPet: petsInTier[2][4],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][3])+" by ",
+        cost: 10e3, gain: 450, reqRank: 4,
+        affectedPet: petsInTier[2][3],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][2])+" by ",
+        cost: 15e3, gain: 350, reqRank: 4,
+        affectedPet: petsInTier[2][2],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][1])+" by ",
+        cost: 20e3, gain: 225, reqRank: 4,
+        affectedPet: petsInTier[2][1],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][0])+" by ",
+        cost: 25e3, gain: 150, reqRank: 4,
+        affectedPet: petsInTier[2][0],
+      },
+      //rank 5
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][4])+" by ",
+        cost: 15e3, gain: 650, reqRank: 5,
+        affectedPet: petsInTier[2][4],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][3])+" by ",
+        cost: 22.5e3, gain: 550, reqRank: 5,
+        affectedPet: petsInTier[2][3],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][2])+" by ",
+        cost: 30e3, gain: 450, reqRank: 5,
+        affectedPet: petsInTier[2][2],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][1])+" by ",
+        cost: 37.5e3, gain: 350, reqRank: 5,
+        affectedPet: petsInTier[2][1],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][0])+" by ",
+        cost: 45e3, gain: 250, reqRank: 5,
+        affectedPet: petsInTier[2][0],
+      },
+      //rank 6
+      {
+        title: "Way Cheaper "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][4])+" by ",
+        cost: 30e3, gain: 700, reqRank: 6,
+        affectedPet: petsInTier[2][4],
+      },
+      {
+        title: "Way Cheaper "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][3])+" by ",
+        cost: 37.5e3, gain: 600, reqRank: 6,
+        affectedPet: petsInTier[2][3],
+      },
+      {
+        title: "Way Cheaper "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][2])+" by ",
+        cost: 45e3, gain: 500, reqRank: 6,
+        affectedPet: petsInTier[2][2],
+      },
+      {
+        title: "Way Cheaper "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][1])+" by ",
+        cost: 52.5e3, gain: 400, reqRank: 6,
+        affectedPet: petsInTier[2][1],
+      },
+      {
+        title: "Way Cheaper "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[2][0])+" by ",
+        cost: 60e3, gain: 300, reqRank: 6,
+        affectedPet: petsInTier[2][0],
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 5,
+        affectedPet: petsInTier[0][0],
+      },
+    ],
+    [
+      //rank 5
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[3][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][4])+" by ",
+        cost: 10e3, gain: 1400, reqRank: 5,
+        affectedPet: petsInTier[3][4],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[3][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][3])+" by ",
+        cost: 17.5e3, gain: 1250, reqRank: 5,
+        affectedPet: petsInTier[3][3],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[3][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][2])+" by ",
+        cost: 25e3, gain: 1100, reqRank: 5,
+        affectedPet: petsInTier[3][2],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[3][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][1])+" by ",
+        cost: 32.5e3, gain: 950, reqRank: 5,
+        affectedPet: petsInTier[3][1],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[3][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][0])+" by ",
+        cost: 40e3, gain: 800, reqRank: 5,
+        affectedPet: petsInTier[3][0],
+      },
+      //rank 6
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[3][4]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][4])+" by ",
+        cost: 20e3, gain: 1400, reqRank: 6,
+        affectedPet: petsInTier[3][4],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[3][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][3])+" by ",
+        cost: 27.5e3, gain: 1250, reqRank: 6,
+        affectedPet: petsInTier[3][3],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[3][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][2])+" by ",
+        cost: 35e3, gain: 1100, reqRank: 6,
+        affectedPet: petsInTier[3][2],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[3][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][1])+" by ",
+        cost: 42.5e3, gain: 950, reqRank: 6,
+        affectedPet: petsInTier[3][1],
+      },
+      {
+        title: "Even Cheaper "+makeColoredPetSpan(petsInTier[3][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[3][0])+" by ",
+        cost: 50e3, gain: 800, reqRank: 6,
+        affectedPet: petsInTier[3][0],
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 6,
+        affectedPet: petsInTier[0][0],
+      },
+    ],
+    [
+      //rank 6
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[4][3]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[4][3])+" by ",
+        cost: 25e3, gain: 15000, reqRank: 6,
+        affectedPet: petsInTier[4][3],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[4][2]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[4][2])+" by ",
+        cost: 30e3, gain: 15000, reqRank: 6,
+        affectedPet: petsInTier[4][2],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[4][1]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[4][1])+" by ",
+        cost: 35e3, gain: 15000, reqRank: 6,
+        affectedPet: petsInTier[4][1],
+      },
+      {
+        title: "Cheaper "+makeColoredPetSpan(petsInTier[4][0]),
+        description: "Lower the cost<br>of "+makeColoredPetSpan(petsInTier[4][0])+" by ",
+        cost: 40e3, gain: 15000, reqRank: 6,
+        affectedPet: petsInTier[4][0],
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 6,
         affectedPet: petsInTier[0][0],
       },
     ],
   ],
   [
     [
+      //rank 3
       {
         title: "More "+makeColoredPetSpan(petsInTier[0][0]),
         description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][0])+" you can buy by ",
@@ -742,11 +1392,322 @@ const upgrades = [
         cost: 500e3, gain: 4, reqRank: 3,
         affectedPet: petsInTier[0][4],
       },
+      //rank 4
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[0][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][0])+" you can buy by ",
+        cost: 1e6, gain: 5, reqRank: 4,
+        affectedPet: petsInTier[0][0],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[0][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][1])+" you can buy by ",
+        cost: 2e6, gain: 5, reqRank: 4,
+        affectedPet: petsInTier[0][1],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[0][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][2])+" you can buy by ",
+        cost: 3e6, gain: 5, reqRank: 4,
+        affectedPet: petsInTier[0][2],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[0][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][3])+" you can buy by ",
+        cost: 4e6, gain: 5, reqRank: 4,
+        affectedPet: petsInTier[0][3],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[0][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][4])+" you can buy by ",
+        cost: 5e6, gain: 5, reqRank: 4,
+        affectedPet: petsInTier[0][4],
+      },
+      //rank 5
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[0][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][0])+" you can buy by ",
+        cost: 6e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[0][0],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[0][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][1])+" you can buy by ",
+        cost: 7e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[0][1],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[0][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][2])+" you can buy by ",
+        cost: 8e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[0][2],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[0][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][3])+" you can buy by ",
+        cost: 9e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[0][3],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[0][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][4])+" you can buy by ",
+        cost: 10e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[0][4],
+      },
+      //rank 6
+      {
+        title: "Way More "+makeColoredPetSpan(petsInTier[0][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][0])+" you can buy by ",
+        cost: 11e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[0][0],
+      },
+      {
+        title: "Way More "+makeColoredPetSpan(petsInTier[0][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][1])+" you can buy by ",
+        cost: 12e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[0][1],
+      },
+      {
+        title: "Way More "+makeColoredPetSpan(petsInTier[0][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][2])+" you can buy by ",
+        cost: 13e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[0][2],
+      },
+      {
+        title: "Way More "+makeColoredPetSpan(petsInTier[0][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][3])+" you can buy by ",
+        cost: 14e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[0][3],
+      },
+      {
+        title: "Way More "+makeColoredPetSpan(petsInTier[0][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[0][4])+" you can buy by ",
+        cost: 15e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[0][4],
+      },
       
       {
         title: "Maxed",
         description: "",
-        cost: Infinity, gain: 0, reqRank: 3,
+        cost: Infinity,
+        gain: 0,
+        reqRank: 6,
+      },
+    ],
+    [
+      //rank 4
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][0])+" you can buy by ",
+        cost: 1.5e6, gain: 4, reqRank: 4,
+        affectedPet: petsInTier[1][0],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][1])+" you can buy by ",
+        cost: 2.5e6, gain: 4, reqRank: 4,
+        affectedPet: petsInTier[1][1],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][2])+" you can buy by ",
+        cost: 3.5e6, gain: 4, reqRank: 4,
+        affectedPet: petsInTier[1][2],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][3])+" you can buy by ",
+        cost: 4.5e6, gain: 4, reqRank: 4,
+        affectedPet: petsInTier[1][3],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][4])+" you can buy by ",
+        cost: 5.5e6, gain: 4, reqRank: 4,
+        affectedPet: petsInTier[1][4],
+      },
+      //rank 5
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][0])+" you can buy by ",
+        cost: 7e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[1][0],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][1])+" you can buy by ",
+        cost: 8e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[1][1],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][2])+" you can buy by ",
+        cost: 9e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[1][2],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][3])+" you can buy by ",
+        cost: 10e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[1][3],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][4])+" you can buy by ",
+        cost: 11e6, gain: 5, reqRank: 5,
+        affectedPet: petsInTier[1][4],
+      },
+      //rank 6
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[1][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][0])+" you can buy by ",
+        cost: 12e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[1][0],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[1][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][1])+" you can buy by ",
+        cost: 13e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[1][1],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[1][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][2])+" you can buy by ",
+        cost: 14e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[1][2],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[1][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][3])+" you can buy by ",
+        cost: 15e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[1][3],
+      },
+      {
+        title: "Much More "+makeColoredPetSpan(petsInTier[1][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[1][4])+" you can buy by ",
+        cost: 16e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[1][4],
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 6,
+      },
+    ],
+    [
+      //rank 5
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][0])+" you can buy by ",
+        cost: 8e6, gain: 4, reqRank: 5,
+        affectedPet: petsInTier[2][0],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][1])+" you can buy by ",
+        cost: 9e6, gain: 4, reqRank: 5,
+        affectedPet: petsInTier[2][1],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][2])+" you can buy by ",
+        cost: 10e6, gain: 4, reqRank: 5,
+        affectedPet: petsInTier[2][2],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][3])+" you can buy by ",
+        cost: 11e6, gain: 4, reqRank: 5,
+        affectedPet: petsInTier[2][3],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][4])+" you can buy by ",
+        cost: 12e6, gain: 4, reqRank: 5,
+        affectedPet: petsInTier[2][4],
+      },
+      //rank 6
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[2][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][0])+" you can buy by ",
+        cost: 13e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[2][0],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[2][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][1])+" you can buy by ",
+        cost: 14e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[2][1],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[2][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][2])+" you can buy by ",
+        cost: 15e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[2][2],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[2][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][3])+" you can buy by ",
+        cost: 16e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[2][3],
+      },
+      {
+        title: "Even More "+makeColoredPetSpan(petsInTier[2][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[2][4])+" you can buy by ",
+        cost: 17e6, gain: 5, reqRank: 6,
+        affectedPet: petsInTier[2][4],
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 6,
+      },
+    ],
+    [
+      //rank 6
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[3][0]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[3][0])+" you can buy by ",
+        cost: 14e6, gain: 4, reqRank: 6,
+        affectedPet: petsInTier[3][0],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[3][1]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[3][1])+" you can buy by ",
+        cost: 15e6, gain: 4, reqRank: 6,
+        affectedPet: petsInTier[3][1],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[3][2]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[3][2])+" you can buy by ",
+        cost: 16e6, gain: 4, reqRank: 6,
+        affectedPet: petsInTier[3][2],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[3][3]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[3][3])+" you can buy by ",
+        cost: 17e6, gain: 4, reqRank: 6,
+        affectedPet: petsInTier[3][3],
+      },
+      {
+        title: "More "+makeColoredPetSpan(petsInTier[3][4]),
+        description: "Increase the # of "+makeColoredPetSpan(petsInTier[3][4])+" you can buy by ",
+        cost: 18e6, gain: 4, reqRank: 6,
+        affectedPet: petsInTier[3][4],
+      },
+      
+      {
+        title: "Maxed",
+        description: "",
+        cost: Infinity,
+        gain: 0,
+        reqRank: 6,
       },
     ],
   ],
@@ -1125,6 +2086,75 @@ const altarUpgrades = {
     {tokenCost: 5.25e6, energyCost: 40000, nextReq: ""},
     {tokenCost: Infinity, energyCost: Infinity, nextReq: ""},
   ],
+  U: [
+    {tokenCost: 2.5e6, energyCost: 10000, nextReq: "QRST"},
+    {tokenCost: 2.75e6, energyCost: 12500, nextReq: "PRST"},
+    {tokenCost: 3e6, energyCost: 15000, nextReq: "RST"},
+    {tokenCost: 3.125e6, energyCost: 16250, nextReq: "QST"},
+    {tokenCost: 3.25e6, energyCost: 17500, nextReq: "PST"},
+    {tokenCost: 3.5e6, energyCost: 20000, nextReq: "ST"},
+    {tokenCost: 3.6e6, energyCost: 21000, nextReq: "RT"},
+    {tokenCost: 3.7e6, energyCost: 22000, nextReq: "QT"},
+    {tokenCost: 3.8e6, energyCost: 23000, nextReq: "PT"},
+    {tokenCost: 4e6, energyCost: 25000, nextReq: "T"},
+    {tokenCost: 4.1e6, energyCost: 26000, nextReq: "S"},
+    {tokenCost: 4.2e6, energyCost: 27000, nextReq: "R"},
+    {tokenCost: 4.3e6, energyCost: 28000, nextReq: "Q"},
+    {tokenCost: 4.4e6, energyCost: 29000, nextReq: "P"},
+    {tokenCost: 4.5e6, energyCost: 30000, nextReq: "KLMNO"},
+    {tokenCost: 7.5e6, energyCost: 50000, nextReq: "FGHIJ"},
+    {tokenCost: 8.75e6, energyCost: 62500, nextReq: "ABCDE"},
+    {tokenCost: 10e6, energyCost: 75000, nextReq: ""},
+    {tokenCost: Infinity, energyCost: Infinity, nextReq: ""},
+  ],
+  V: [
+    {tokenCost: 2.5e6, energyCost: 10000, nextReq: "QRSTU"},
+    {tokenCost: 2.75e6, energyCost: 12500, nextReq: "PRSTU"},
+    {tokenCost: 3e6, energyCost: 15000, nextReq: "RSTU"},
+    {tokenCost: 3.125e6, energyCost: 16250, nextReq: "QSTU"},
+    {tokenCost: 3.25e6, energyCost: 17500, nextReq: "PSTU"},
+    {tokenCost: 3.5e6, energyCost: 20000, nextReq: "STU"},
+    {tokenCost: 3.6e6, energyCost: 21000, nextReq: "RTU"},
+    {tokenCost: 3.7e6, energyCost: 22000, nextReq: "QTU"},
+    {tokenCost: 3.8e6, energyCost: 23000, nextReq: "PTU"},
+    {tokenCost: 4e6, energyCost: 25000, nextReq: "TU"},
+    {tokenCost: 4.1e6, energyCost: 26000, nextReq: "SU"},
+    {tokenCost: 4.2e6, energyCost: 27000, nextReq: "RU"},
+    {tokenCost: 4.3e6, energyCost: 28000, nextReq: "QU"},
+    {tokenCost: 4.4e6, energyCost: 29000, nextReq: "PU"},
+    {tokenCost: 4.5e6, energyCost: 30000, nextReq: "KLMNOU"},
+    {tokenCost: 4.75e6, energyCost: 32500, nextReq: "FGHIJU"},
+    {tokenCost: 5e6, energyCost: 35000, nextReq: "ABCDEU"},
+    {tokenCost: 5.25e6, energyCost: 37500, nextReq: "U"},
+    {tokenCost: 5.5e6, energyCost: 40000, nextReq: "PQRST"},
+    {tokenCost: 5.6e6, energyCost: 41000, nextReq: "QRST"},
+    {tokenCost: 5.7e6, energyCost: 42000, nextReq: "PRST"},
+    {tokenCost: 5.9e6, energyCost: 44000, nextReq: "RST"},
+    {tokenCost: 6e6, energyCost: 45000, nextReq: "QST"},
+    {tokenCost: 6.1e6, energyCost: 46000, nextReq: "PST"},
+    {tokenCost: 6.3e6, energyCost: 48000, nextReq: "ST"},
+    {tokenCost: 6.4e6, energyCost: 49000, nextReq: "RT"},
+    {tokenCost: 6.5e6, energyCost: 50000, nextReq: "QT"},
+    {tokenCost: 6.6e6, energyCost: 51000, nextReq: "PT"},
+    {tokenCost: 6.8e6, energyCost: 53000, nextReq: "T"},
+    {tokenCost: 6.9e6, energyCost: 54000, nextReq: "S"},
+    {tokenCost: 7e6, energyCost: 55000, nextReq: "R"},
+    {tokenCost: 7.1e6, energyCost: 56000, nextReq: "Q"},
+    {tokenCost: 7.2e6, energyCost: 57000, nextReq: "P"},
+    {tokenCost: 7.3e6, energyCost: 58000, nextReq: "KLMNO"},
+    {tokenCost: 7.5e6, energyCost: 60000, nextReq: "FGHIJ"},
+    {tokenCost: 7.75e6, energyCost: 62500, nextReq: "ABCDE"},
+    {tokenCost: 8e6, energyCost: 65000, nextReq: ""},
+    {tokenCost: Infinity, energyCost: Infinity, nextReq: ""},
+  ],
+  W: [
+    {tokenCost: 2.5e6, energyCost: 10000, nextReq: ""},
+    {tokenCost: Infinity, energyCost: Infinity, nextReq: ""},
+  ],
+  X: [
+    {tokenCost: 2.5e6, energyCost: 10000, nextReq: ""},
+    {tokenCost: Infinity, energyCost: Infinity, nextReq: ""},
+  ],
 }
 
 
@@ -1136,7 +2166,7 @@ const tabData = {
   shop: "yellow",
   upgrades: "purple",
   altar: "purple",
-  rebirth: "red",
+  /*rebirth: "red",*/
 }
 
 

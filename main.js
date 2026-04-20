@@ -360,11 +360,53 @@ function checkUnlocks() {
   if (user.rank>2) {
     showId("upgradesButtonCon0-2");
     showId("upgradesButtonCon1-1");
+    showId("upgradesColumn2");
   }
   else {
     hideId("upgradesButtonCon0-2");
     hideId("upgradesButtonCon1-1");
+    hideId("upgradesColumn2");
   }
+  if (user.rank>3) {
+    showId("upgradesButtonCon0-3");
+    showId("upgradesButtonCon1-2");
+    showId("upgradesButtonCon2-1");
+  }
+  else {
+    hideId("upgradesButtonCon0-3");
+    hideId("upgradesButtonCon1-2");
+    hideId("upgradesButtonCon2-1");
+  }
+  if (user.rank>4) {
+    showId("upgradesButtonCon0-4");
+    showId("upgradesButtonCon1-3");
+    showId("upgradesButtonCon2-2");
+  }
+  else {
+    hideId("upgradesButtonCon0-4");
+    hideId("upgradesButtonCon1-3");
+    hideId("upgradesButtonCon2-2");
+  }
+  //altar
+  if (user.rank>3) {
+    di("altarUpgradesCon").lastElementChild.style.display = "";
+  }
+  else {
+    di("altarUpgradesCon").lastElementChild.style.display = "none";
+  }
+  //rebirth
+  if (user.rank>5) {
+    let hasPets = true;
+    for (let name in game.pets) {
+      if (!user.hasPets.includes(name)) {
+        hasPets = false;
+        break;
+      }
+    }
+    if (hasPets) {showId("rebirthCon")}
+    else {hideId("rebirthCon")}
+  }
+  else {hideId("rebirthCon")}
   //tabs
   if (user.highestEnergyTier>0) {
     showId("optionsTabButton");
@@ -384,16 +426,8 @@ function checkUnlocks() {
   }
   if (user.rank>0) {showId("upgradesTabButton")}
   else {hideId("upgradesTabButton")}
-  if (user.rank>2) {
-    showId("upgradesColumn2");
-    showId("altarTabButton");
-  }
-  else {
-    hideId("upgradesColumn2");
-    hideId("altarTabButton");
-  }
-  
-  hideId("rebirthTabButton");
+  if (user.rank>2) {showId("altarTabButton")}
+  else {hideId("altarTabButton")}
 }
 function checkAchievements() {
   //1: ABCs
@@ -463,6 +497,31 @@ function checkAchievements() {
   }
   //11: It's getting easier
   if (!user.hasAchievements.includes("11") && Object.values(user.altarUpgrades).includes(1)) {giveAchievement("11")}
+  //12: Final Respect
+  if (!user.hasAchievements.includes("12") && user.hasPets.includes("U")) {giveAchievement("12")}
+  //13: Finally the end
+  if (!user.hasAchievements.includes("13")) {
+    let hasPets = true;
+    for (let pet of petsInTier[4]) {
+      if (!user.hasPets.includes(pet)) {
+        hasPets = false;
+        break;
+      }
+    }
+    if (hasPets) {giveAchievement("13")}
+  }
+  //14: They're all free!
+  if (!user.hasAchievements.includes("14") && user.upgradesCol1[0]>=14) {
+    let altarUpgradesReq = {A:0,B:1,C:2,D:3,E:4},
+        meetsAltarReq = true;
+    for (let pet in altarUpgradesReq) {
+      if (!user.altarUpgrades[pet]<altarUpgradesReq) {
+        meetsAltarReq = false;
+        break;
+      }
+    }
+    if (meetsAltarReq) {giveAchievement("14")}
+  }
 }
 
 
