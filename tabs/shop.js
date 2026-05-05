@@ -68,28 +68,46 @@ function takePet(name) {
 
 //purely visual
 function addPet(name) {
-  di("petSlotIcon"+name).textContent = name;
-  showId("petSlotDesc"+name);
+  di("petSlotLIcon"+name).textContent = name;
+  showId("petSlotLDesc"+name);
 }
 function removePet(name) {
-  di("petSlotIcon"+name).textContent = "";
-  hideId("petSlotDesc"+name);
+  di("petSlotLIcon"+name).textContent = "";
+  hideId("petSlotLDesc"+name);
 }
 
 
 //Calculate Costs and Gains
-/*function getTotalPetCost(name) {
-  let totalCost = game.pets[name].energyCost;
-  function reccPetCosts(reccName) {
-    for (let i=game.pets[reccName].petReq.length-1; i>=0; i--) {
-      let checkPet = game.pets[reccName].petReq[i];
-      totalCost+=game.pets[checkPet].energyCost;
-      reccPetCosts(checkPet);
+function setShopPets() {
+  let newGame = getNewGame();
+  //energy cost
+  for (let tier in petsInTier) {
+    let gains = getUpgradesGain(1, tier);
+    for (let name of petsInTier[tier]) {
+      game.pets[name].energyCost = newGame.pets[name].energyCost-gains[name];
     }
   }
-  reccPetCosts(name);
-  return totalCost;
-}*/
+  //pet req
+  for (let name in game.pets) {
+    let userLevel = user.altarUpgrades[name],
+        req = (userLevel>0) ? altarUpgrades[name][userLevel-1].nextReq : newGame.pets[name].petReq;
+    game.pets[name].petReq = req;
+  }
+  //tokens per second
+  for (let tier in petsInTier) {
+    let gains = getUpgradesGain(0, tier);
+    for (let name of petsInTier[tier]) {
+      game.pets[name].tokensPerSec = newGame.pets[name].tokensPerSec+gains[name];
+    }
+  }
+  //max count
+  for (let tier in petsInTier) {
+    let gains = getUpgradesGain(2, tier);
+    for (let name of petsInTier[tier]) {
+      game.pets[name].maxCount = 1+gains[name];
+    }
+  }
+}
 
 
 //Update HTMl

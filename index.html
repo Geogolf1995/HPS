@@ -48,7 +48,11 @@ SOFTWARE.
     <script src="tabs/shop.js" defer="defer"></script>
     <script src="tabs/upgrades.js" defer="defer"></script>
     <script src="tabs/altar.js" defer="defer"></script>
-    <script src="tabs/rebirth.js" defer="defer"></script><!---->
+    <script src="tabs/rebirth/milestones.js" defer="defer"></script>
+    <script src="tabs/rebirth/shop.js" defer="defer"></script>
+    <script src="tabs/rebirth/upgrades.js" defer="defer"></script>
+    <script src="tabs/rebirth/challenges.js" defer="defer"></script>
+    <script src="tabs/rebirth/main.js" defer="defer"></script>
     
     <!-- Initialization -->
     <script src="data.js" defer="defer"></script>
@@ -65,16 +69,17 @@ SOFTWARE.
         </div>
         <div id="rankCon">
           <span id="rank" class="redText" style="font-size: 26px; font-weight: bold">RANK VIII</span><br>
-          <span class="purpleText" style="font-size: 36px; display: none"><span id="coins">999.99M</span> <span class="coinsIcon">?</span></span>
+          <span id="coinsCon" class="purpleText" style="font-size: 36px; position: relative; bottom: 7px"><span id="coins">999.99M</span> <span class="coinsIcon">?</span></span><br>
+          <span id="inChallengeCon" class="ch" style="top: 65px; font-size: 16px">Currently in challenge <span id="inChallenge" class="redText"></span></span>
         </div>
         <div id="energyCon">
           <span class="yellowText" style="font-size: 36px"><span id="energy">999.99M</span> <span class="energyIcon">?</span></span><br>
-          <span style="font-size: 26px; display: none"><span class="yellowText">+<span id="energyPerSec">999.99M</span> <span class="energyIcon">?</span></span> /sec</span>
+          <span id="energyPerSecCon" style="font-size: 26px"><span class="yellowText">+<span id="energyPerSec">999.99M</span> <span class="energyIcon">?</span></span> /sec</span>
         </div>
       </div>
       <div id="centralCon" class="scroll">
         <div id="petConLeft">
-          <div id="petSlot" class="petSlot tte" style="display: none">
+          <div id="petSlotL" class="petSlot tte" style="display: none">
             <span class="chv" style="font-size: 50px; font-weight: bold"></span>
             <span class="ttc r" style="width: 110px; top: 0px; left: 81px; display: none">
               <span class="blueText" style="font-size: 17px">+<span>999.99M</span> <span class="tokensIcon">?</span></span>/s
@@ -84,7 +89,7 @@ SOFTWARE.
         </div>
         <div id="tabsCon">
           <div id="optionsTab"></div>
-          <div id="achievementsTab">
+          <div id="achievementsTab" class="scroll" style="height: 100%">
             <div class="cht" style="font-size: 24px">
               <span>You have completed <span id="totalAchievements" class="greenText">99</span> achievements</span><br>
               <span>Increasing <span class="tokensIcon blueText">?</span> gain by <span class="blueText">+<span id="achievementMulti">999.99M</span></span> /sec</span>
@@ -103,9 +108,12 @@ SOFTWARE.
           <div id="runTab">
             <div id="runResetCon">
               <div id="rebirthCon">
-                <div id="rebirthButton" class="resetButton chv redText">
-                  <span class="ch" style="font-size: 32px; font-weight: bold">Rebirth</span><br>
-                  <span class="ch" style="font-size: 26px; bottom: 5px; left: 47%">- <span id="rebirthCost">A-X</span></span>
+                <div id="rebirthButton" class="resetButton chv tte">
+                  <span class="ttc b" style="height: 50px; width: 196px; bottom: -70px; left: -3px; font-size: 20px">
+                    Rank up to earn<br>more coins
+                  </span>
+                  <span class="ch redText" style="font-size: 32px; font-weight: bold">Rebirth</span><br>
+                  <span class="ch purpleText" style="font-size: 26px; bottom: 5px">+<span id="rebirthCost">99</span> <span class="coinsIcon">?</span></span>
                 </div>
               </div>
               <div id="resetEnergyCon">
@@ -138,7 +146,14 @@ SOFTWARE.
                 <span id="runButtonEndMessage" class="chvt" style="font-size: 32px; font-weight: bold">The End</span>
               </div>
             </div>
-            <div id="runMultiCon"></div>
+            <div id="runMultiCon" style="display: flex">
+              <div id="tokensMultiCon" class="cht">
+                <span class="chv blueText" style="width: 100%; font-size: 40px">x<span id="tokensMulti">999.99M</span> <span class="tokensIcon">?</span></span>
+              </div>
+              <div id="energyMultiCon" class="cht">
+                <span class="chv yellowText" style="width: 100%; font-size: 40px">x<span id="energyMulti">999.99M</span> <span class="energyIcon">?</span></span>
+              </div>
+            </div>
           </div>
           <div id="shopTab" class="cht scroll" style="height: 100%">
             <span style="font-size: 26px">Buy letters to increase <span class="tokensIcon blueText">?</span> production<br>Rankup to unlock more letters</span><br>
@@ -169,9 +184,9 @@ SOFTWARE.
                 <div id="upgradesButtonCon" class="upgradesButtonCon" style="display: none">
                   <div class="upgradesButton cht tte" style="font-size: 20px; cursor: pointer">
                     <span style="font-size: 30px">Title</span><br>
-                    <span class="ttc t" style="width: 250px; height: 75px; top: -87px; left: -5px">
+                    <span class="ttc t" style="width: 250px; height: 100px; top: -87px; left: -5px">
                       <span>Description</span><br>
-                      <span style="font-size: 16px">M+99 M+99 M+99 M+99 M+99</span>
+                      <span style="font-size: 16px">M+99.99M M+99.99M M+99.99M M+99.99M M+99.99M</span>
                     </span>
                     <span><span>99</span>/<span>99</span></span><br>
                     <span class="ch" style="bottom: 1px">-<span>999.99M</span> <span>?</span></span>
@@ -210,9 +225,144 @@ SOFTWARE.
               </div>
             </div>
           </div>
-          <div id="rebirthTab"></div>
+          <div id="rebirthTab" class="scroll" style="height: 100%">
+            <div id="rebirthTabButtonsCon" style="width: 100%; display: flex; flex-wrap: wrap"></div>
+            <div id="rebirthMilestonesTab" class="cht">
+              <span style="font-size: 26px; position: relative; top: 3px">You have rebirthed <span id="rebirthCount">999.99M</span> times</span>
+              <hr>
+              <div class="table">
+                <div class="tableRow">
+                  <div id="milestoneCell" class="milestoneCell cht" style="display: none">
+                    <span style="font-size: 24px">999.99M Rebirths</span>
+                    <span class="ch" style="bottom: 0px; width: 100%; font-size: 16px">Description</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="rebirthShopTab" class="cht scroll" style="height: 100%">
+              <span style="font-size: 26px">Buy numbers to increase <span class="energyIcon yellowText">?</span> production</span>
+              <div id="respecPetsButton" class="ch respecButton">
+                <span class="chv" style="width: 100%; font-size: 24px">Respec<br><span style="font-size: 16px">(Requires rebirth)</span></span>
+              </div>
+              <hr>
+              <div id="rebirthShopPetsCon" class="table">
+                <div class="tableRow">
+                  <div id="rebirthShopPet" class="shopPet tte" style="display: none">
+                    <span class="ttc t" style="width: 130px; height: 92px; top:-105px; left: -5px; font-size: 24px">
+                      <span class="purpleText">-<span>999.99M</span> <span class="coinsIcon">?</span></span><br>
+                      <span>-MMMMM</span><br>
+                      <span class="purpleText" style="font-size: 18px">(<span>999.99M</span> <span class="coinsIcon">?</span>)</span>
+                    </span>
+                    <span class="ch" style="top: 8px; font-size: 75px; font-weight: bold">M</span><br>
+                    <span class="ch" style="bottom: 5px; font-size: 19px; width: 100%"><span class="yellowText">+<span>999.99M</span> <span class="energyIcon">?</span></span> /s</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="rebirthUpgradesTab" class="cht">
+              <span style="font-size: 26px; position: relative; top: 3px">Buy upgrades to progress further and faster</span>
+              <div id="respecUpgradesButton" class="ch respecButton">
+                <span class="chv" style="width: 100%; font-size: 24px">Respec<br><span style="font-size: 16px">(Requires rebirth)</span></span>
+              </div>
+              <hr>
+              <div class="tableRow" style="margin-top: 15px">
+                <div id="rebirthUpgradeButton0" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade0Cost" class="purpleText">-999.99M</span> <span class="coinsIcon">?</span><br>
+                    <span id="rebirthUpgrade0Gain" class="blueText">+999.99M</span>
+                  </span>
+                  <span>Add a multiplier to<br>token earnings</span>
+                  <span id="rebirthUpgrade0TotalGain" class="ch blueText" style="bottom: 5px">x999.99M</span>
+                </div>
+                <div id="rebirthUpgradeButton1" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade1Cost" class="purpleText">-999.99M</span> <span class="coinsIcon">?</span><br>
+                    <span id="rebirthUpgrade1Gain" class="yellowText">+999.99M</span>
+                  </span>
+                  <span>Add a multiplier to<br>energy earnings</span>
+                  <span id="rebirthUpgrade1TotalGain" class="ch yellowText" style="bottom: 5px">x999.99M</span>
+                </div>
+              </div>
+              <div class="tableRow" style="margin-top: 15px">
+                <div id="rebirthUpgradeButton2" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade2Cost" class="purpleText">-999.99M</span> <span class="coinsIcon">?</span><br>
+                    <span id="rebirthUpgrade2Gain" class="blueText">+999</span>
+                  </span>
+                  <span>Clicking the button skips<br>ahead multiple steps</span>
+                  <span id="rebirthUpgrade2TotalGain" class="ch blueText" style="bottom: 5px">+999</span>
+                </div>
+              </div>
+              <div class="tableRow" style="margin-top: 15px">
+                <div id="rebirthUpgradeButton3" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade3Cost" class="purpleText">-999.99M</span> <span class="coinsIcon">?</span><br>
+                    +<span id="rebirthUpgrade3Gain" class="blueText">x999</span>
+                  </span>
+                  <span>Energy boosts token gain</span>
+                  <span class="ch" style="bottom: 5px">+<span id="rebirthUpgrade3TotalGain" class="blueText">x999</span></span>
+                </div>
+                <div id="rebirthUpgradeButton4" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade4Cost" class="purpleText">-999.99M</span> <span class="coinsIcon">?</span><br>
+                    +<span id="rebirthUpgrade4Gain" class="yellowText">x999.99</span>
+                  </span>
+                  <span>Tokens boost energy gain</span>
+                  <span class="ch" style="bottom: 5px">+<span id="rebirthUpgrade4TotalGain" class="yellowText">x999.99</span></span>
+                </div>
+              </div>
+              <div class="tableRow" style="margin-top: 15px">
+                <div id="rebirthUpgradeButton5" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade5Cost" class="purpleText">-999.99M</span> <span class="coinsIco"></span><br>
+                    <span id="rebirthUpgrade5Gain">MMMMM</span>
+                  </span>
+                  <span>Auto buy letters</span>
+                  <span id="rebirthUpgrade5TotalGain" class="ch" style="bottom: 5px">M-M</span>
+                </div>
+                <div id="rebirthUpgradeButton6" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade6Cost" class="purpleText">-999.99M</span> <span class="coinsIco"></span><br>
+                    <span id="rebirthUpgrade6Gain">x999.99M</span>
+                  </span>
+                  <span>The achievement bonus becomes a multi</span>
+                  <span id="rebirthUpgrade6TotalGain" class="ch" style="bottom: 5px">x999.99M</span>
+                </div>
+                <div id="rebirthUpgradeButton7" class="upgradesButton tte" style="font-size: 20px">
+                  <span class="ttc t" style="width: 245px; height: 50px; top: -62px; left: -3px; font-size: 22px">
+                    <span id="rebirthUpgrade7Cost" class="purpleText">-999.99M</span> <span class="coinsIco"></span><br>
+                    <span id="rebirthUpgrade7Gain"></span>
+                  </span>
+                  <span>Auto rankup</span>
+                  <span id="rebirthUpgrade7TotalGain" class="ch" style="bottom: 5px"></span>
+                </div>
+              </div>
+            </div>
+            <div id="rebirthChallengesTab" class="cht">
+              <span style="position: relative; top: 3px; font-size: 26px">Click the challenge again to exit it</span>
+              <hr>
+              <div class="table">
+                <div class="tableRow">
+                  <div id="challengeButton" class="challengeButton cht" style="display: none">
+                    <span class="chv challengeDisplayId">9</span>
+                    <span class="ch" style="width: 100%; top: 5px; font-size: 26px">Title</span>
+                    <span class="chv" style="width: 100%">Description</span>
+                    <span class="ch" style="width: 100%; bottom: 5px">Reward</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="petConRight"></div>
+        <div id="petConRight">
+          <div id="petSlotR" class="petSlot tte" style="display: none">
+            <span class="chv" style="font-size: 50px; font-weight: bold"></span>
+            <span class="ttc l" style="width: 110px; top: 0px; right: 81px; display: none">
+              <span class="yellowText" style="font-size: 17px">+<span>999.99M</span> <span class="energyIcon">?</span></span>/s
+            </span>
+            <span style="font-size: 24px; font-weight: bold; position: relative; left: 5px">00</span>
+          </div>
+        </div>
       </div>
       <div id="tabButtonsCon">
         <div id="tabButton" class="tabButton" style="display: none">

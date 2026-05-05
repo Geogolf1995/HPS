@@ -1,5 +1,6 @@
 //Update Messages
 const updateMessages = {
+  "v3.0": "- Added rebirth and related content<br>- Balanced some features<br>-Fixed some visual inconsistencies",
   "v2.5": "- Added ranks IV-VI and related content<br>- Fixed some bugs",
   "v2.4": "- Added rank III and related content<br>- Added altar upgrades<br>- Some energy rewards have been increased",
   "v2.3": "- Added three more letters<br>- Yellow letters recieved a huge buff",
@@ -64,6 +65,24 @@ function updateVersion(loadUser) {
     loadUser.version = "v2.5";
     updated = true;
   }
+  if (loadUser.version=="v2.5") {
+    loadUser.version = "v3.0";
+    delete loadUser.altarUpgrades.Y;
+    delete loadUser.altarUpgrades.Z;
+    loadUser.coins = 0;
+    loadUser.rebirthCount = 0;
+    loadUser.rebirthTab = "Tree";
+    loadUser.hasRebirthPets = "";
+    loadUser.rebirthUpgrades = [0,0,0,0,0];
+    loadUser.altarUpgrades.U = 0;
+    loadUser.altarUpgrades.V = 0;
+    loadUser.altarUpgrades.W = 0;
+    loadUser.altarUpgrades.X = 0;
+    loadUser.challenges = [null,0,0,0];
+    loadUser.inChallenge = 0;
+    loadUser.totalCoins = 0;
+    updated = true;
+  }
   
   //if user does not have a last update time, set the time to now
   if (loadUser.lastUpdate===null) {loadUser.lastUpdate = Date.now()}
@@ -103,7 +122,7 @@ function initialization(updated) {
 
 function setGame() {
   //the order matters!
-  
+    
   //pets & shop
   for (let name in game.pets) {
     //add visual pets
@@ -112,6 +131,14 @@ function setGame() {
     }
     else {
       removePet(name);
+    }
+  }
+  for (let name in game.rebirthPets) {
+    if (user.hasRebirthPets.includes(name)) {
+      addRebirthPet(name);
+    }
+    else {
+      removeRebirthPet(name);
     }
   }
   
@@ -126,6 +153,7 @@ function setGame() {
       game.energyTier = 0;
     }
   }
+  setMultis();
   
   //upgrades
   //column 0
@@ -160,12 +188,18 @@ function setGame() {
   
   //pets & shop again
   setTotalPetCost();
+  setTotalRebirthPetCost();
+  
+  //rebirth
+  /*setRebirthUpgrades01Gain();*/
+  setRebirthUpgrade2TotalGain();
   
   //achievements
-  getAchievementsTokensPerSec();
+  setAchievementsTokensPerSec();
   
   //resources
   getTokensPerSec();
+  getEnergyPerSec();
 }
 function showChangelog(firstVersion, exclusive) {
   let updateMessage = "";
