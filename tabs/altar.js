@@ -1,8 +1,9 @@
 //Buttons
 function buyAltarPetUpgrade(name) {
   if (logActions) {console.log("user > buyAltarPetUpgrade("+name+")")}
-  //check if an upgrade is available
-    //check if user has enough tokens and energy
+  //check if user is not in challenge 3
+  if (user.inChallenge==3) {return}
+  //check if user has enough tokens and energy
   if (user.tokens>=altarUpgrades[name][user.altarUpgrades[name]].tokenCost && user.energy>=altarUpgrades[name][user.altarUpgrades[name]].energyCost) {
     //take resources
     user.tokens-=altarUpgrades[name][user.altarUpgrades[name]].tokenCost;

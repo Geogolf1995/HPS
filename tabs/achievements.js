@@ -5,7 +5,7 @@ function giveAchievement(id) {
   if (!user.hasAchievements.includes(id)) {
     user.hasAchievements.push(id);
     //update costs and gains
-    getAchievementsTokensPerSec();
+    setAchievementsTokensPerSec();
     //alert user
     alertify.message("Achievement Earned:<br>"+achievements[id].title);
     updateAchievements();
@@ -19,7 +19,7 @@ function takeAchievement(id) {
   if (user.hasAchievements.includes(id)) {
     user.hasAchievements.splce(user.hasAchievements.indexOf(id), 1);
     //update costs and gains
-    getAchievementsTokensPerSec();
+    setAchievementsTokensPerSec();
     //alert user
     alertify.error("Achievement Lost:<br>"+achievements[id].title);
     updateAchievements();
@@ -30,7 +30,7 @@ function takeAchievement(id) {
 
 
 //Calculate Costs and Gains
-function getAchievementsTokensPerSec() {
+function setAchievementsTokensPerSec() {
   return game.achievementsTokensPerSec = user.hasAchievements.length;
 }
 

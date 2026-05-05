@@ -2,9 +2,10 @@
 function buyUpgradeCol0(row) {
   if (logActions) {console.log("user > buyUpgradeCol0("+row+")")}
   let userLevel = user.upgradesCol0[row];
+  //check if user is not in challenge 1
+  if (user.inChallenge==1) {return}
   //check if user is a high enough rank
-  //really only needed if a bug shows up
-  if (true/*user.rank>0*/) {
+  if (user.rank>0 || user.rebirthCount>0) {
     //check if user has enough tokens
     if (user.tokens>=upgrades[0][row][userLevel].cost) {
       //take tokens
@@ -12,7 +13,7 @@ function buyUpgradeCol0(row) {
       //give upgrade
       user.upgradesCol0[row]++;
       let upgradingPetName = petsInTier[row][userLevel%petsInTier[row].length];
-      game.pets[upgradingPetName].tokensPerSec+=upgrades[0][row][userLevel].gain;
+      game.pets[upgradingPetName].tokensPerSec+=upgrades[0][row][userLevel].gain*(1+0.25*user.challenges[1]);
       //updates
       updateUpgradesButton(0, row);
       updatePets();
@@ -25,8 +26,10 @@ function buyUpgradeCol0(row) {
 function buyUpgradeCol1(row) {
   if (logActions) {console.log("user > buyUpgradeCol1("+row+")")}
   let userLevel = user.upgradesCol1[row];
+  //check if user is not in challenge 1
+  if (user.inChallenge==1) {return}
   //check if user is a high enough rank
-  if (user.rank>1) {
+  if (user.rank>1 || user.rebirthCount>1) {
     //check if user has enough energy
     if (user.energy>=upgrades[1][row][userLevel].cost) {
       //take energy
@@ -47,8 +50,10 @@ function buyUpgradeCol1(row) {
 function buyUpgradeCol2(row) {
   if (logActions) {console.log("user > buyUpgradeCol2("+row+")")}
   let userLevel = user.upgradesCol2[row];
+  //check if user is not in challenge 1
+  if (user.inChallenge==1) {return}
   //check if user is a high enough rank
-  if (user.rank>2) {
+  if (user.rank>2 || user.rebirthCount>2) {
     //check if user has enough tokens
     if (user.tokens>=upgrades[2][row][userLevel].cost) {
       //take tokens
@@ -66,6 +71,7 @@ function buyUpgradeCol2(row) {
   else if (logActions) {console.log("buyUpgradeCol2("+row+") > fail, user is not a high enough rank")}
 }
 
+
 //Calculate Costs and Gains
 function getUpgradesGain(col, row) {
   if (col==0) {
@@ -81,10 +87,14 @@ function getUpgradesGain(col, row) {
       //add the gain every nth level up to the user's current level, where n is the number of pets in this tier
       for (let j=i; j<userLevel && j<upgrades[0][row].length; j+=interval) {
         //if user is a high enough rank
-        if (user.rank>=upgrades[0][row][j].reqRank) {
+        if (user.rank>=upgrades[0][row][j].reqRank || user.rebirthCount>=milestoneUpgradeUnlocks[0][row]) {
           gains[name]+=upgrades[0][row][j].gain;
         }
       }
+    }
+    //add effect of challenge 1
+    for (let name in gains) {
+      gains[name] = gains[name]*(1+0.25*user.challenges[1]);
     }
     //return object of upgrade gains
     return gains;
@@ -102,7 +112,7 @@ function getUpgradesGain(col, row) {
       let affectedPet = upgrades[1][row][i].affectedPet,
           gain = upgrades[1][row][i].gain;
       //if user is a high enough rank
-      if (user.rank>=upgrades[1][row][i].reqRank) {
+      if (user.rank>=upgrades[1][row][i].reqRank || user.rebirthCount>=milestoneUpgradeUnlocks[1][row]) {
         gains[affectedPet]+=gain;
       }
     }
@@ -121,7 +131,7 @@ function getUpgradesGain(col, row) {
       //add the gain every nth level up to the user's current level, where n is the number of pets in this tier
       for (let j=i; j<userLevel && j<upgrades[2][row].length; j+=interval) {
         //if user is a high enough rank
-        if (user.rank>=upgrades[2][row][j].reqRank) {
+        if (user.rank>=upgrades[2][row][j].reqRank || user.rebirthCount>=milestoneUpgradeUnlocks[2][row]) {
           gains[name]+=upgrades[2][row][j].gain;
         }
       }
@@ -129,41 +139,6 @@ function getUpgradesGain(col, row) {
     return gains;
   }
 }
-
-/*function getUpgradesCol0Gain(row) {
-  let userLevel = user.upgradesCol0[row],
-      interval = petsInTier[row].length,
-      gains = {};
-  //for each pet
-  for (let i=0; i<petsInTier[row].length; i++) {
-    //get the pet's name
-    let name = petsInTier[row][i];
-    //set initial gain to 0
-    gains[name] = 0;
-    //add the gain every nth level up to the user's current level, where n is the number of pets in this tier
-    for (let j=i; j<userLevel && j<upgradesCol0[row].length; j+=interval) {
-      gains[name]+=upgradesCol0[row][j].gain;
-    }
-  }
-  //return object of upgrade gains
-  return gains;
-}
-function getUpgradesCol1Gain(row) {
-  let userLevel = user.upgradesCol1[row],
-      gains = {};
-  //add pets as keys
-  for (let i=0; i<petsInTier[row].length; i++) {
-    //set initial gain to 0
-    gains[petsInTier[row][i]] = 0;
-  }
-  //for each level, add the gain from the corresponding pet
-  for (let i=0; i<userLevel; i++) {
-    let affectedPet = upgradesCol1[row][i].affectedPet,
-        gain = upgradesCol1[row][i].gain;
-    gains[affectedPet]+=gain;
-  }
-  return gains;
-}*/
 
 
 //Update HTML
@@ -182,13 +157,13 @@ function updateUpgradesButton(col, row) {
   //update gain
   let gainStr = "",
       userLevel = user["upgradesCol"+col][row],
-      nextGain = (col==0)? (userLevel+1<upgrades[col][row].length)?"<span class=\""+resources.tokens.color+"Text\">+"+upgrades[col][row][userLevel].gain+"</span> <span class=\""+resources.tokens.color+"Text\">"+resources.tokens.icon+"</span>":""
-                :(col==1)? (userLevel+1<upgrades[col][row].length)?"<span class=\""+resources.energy.color+"Text\">-"+upgrades[col][row][userLevel].gain+"</span> <span class=\""+resources.energy.color+"Text\">"+resources.energy.icon+"</span>":""
-                :(col==2)? (userLevel+1<upgrades[col][row].length)?makeColoredPetSpan(upgrades[col][row][user["upgradesCol"+col][row]].affectedPet, "+"+upgrades[col][row][user["upgradesCol"+col][row]].gain):"":"";
-      /*nextGains = (userLevel+1<upgrades[col][row].length)?"<span class=\""+resources.tokens.color+"Text\">+"+upgrades[col][row][userLevel].gain+"</span> <span class=\""+resources.tokens.color+"Text\">"+resources.tokens.icon+"</span>":"";  */
+      nextGain = (col==0)? (userLevel+1<upgrades[col][row].length)?"<span class=\""+resources.tokens.color+"Text\">+"+e(upgrades[col][row][userLevel].gain)+"</span> <span class=\""+resources.tokens.color+"Text\">"+resources.tokens.icon+"</span>":""
+                :(col==1)? (userLevel+1<upgrades[col][row].length)?"<span class=\""+resources.energy.color+"Text\">-"+e(upgrades[col][row][userLevel].gain)+"</span> <span class=\""+resources.energy.color+"Text\">"+resources.energy.icon+"</span>":""
+                :(col==2)? (userLevel+1<upgrades[col][row].length)?makeColoredPetSpan(upgrades[col][row][user["upgradesCol"+col][row]].affectedPet, "+"+e(upgrades[col][row][user["upgradesCol"+col][row]].gain)):"":"";
+      /*nextGain = (userLevel+1<upgrades[col][row].length)?"<span class=\""+resources.tokens.color+"Text\">+"+upgrades[col][row][userLevel].gain+"</span> <span class=\""+resources.tokens.color+"Text\">"+resources.tokens.icon+"</span>":"";  */
   let gains = getUpgradesGain(col, row);
   for (let name in gains) {
-    gainStr += (gains[name]) ? " "+makeColoredPetSpan(name)+"<span class=\""+resources[(col==0)?"tokens":(col==1)?"energy":"tokens"].color+"Text\">"+((col==0)?"+":(col==1)?"-":"")+gains[name]+"</span>" : "";
+    gainStr += (gains[name]) ? " "+makeColoredPetSpan(name)+"<span class=\""+resources[(col==0)?"tokens":(col==1)?"energy":"tokens"].color+"Text\">"+((col==0)?"+":(col==1)?"-":"")+e(gains[name])+"</span>" : "";
   }
   if (col==2) {
     gainStr = "<span class=\""+tierColors[row]+"Text\">";
@@ -202,7 +177,7 @@ function updateUpgradesButton(col, row) {
   //border color
   di("upgradesButton"+col+"-"+row).style.borderColor = tierColors[row];
   //rankupLock
-  if (user.rank>=upgrades[col][row][user["upgradesCol"+col][row]].reqRank) {
+  if (user.rank>=upgrades[col][row][user["upgradesCol"+col][row]].reqRank || user.rebirthCount>=milestoneUpgradeUnlocks[col][row]) {
     di("upgradesButton"+col+"-"+row).style.display = "";
     di("upgradesButtonRankupLock"+col+"-"+row).style.display = "none";
   }

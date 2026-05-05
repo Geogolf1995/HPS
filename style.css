@@ -21,6 +21,7 @@ hr {width: 100%}
   /*--border: rgb(10,15,15);*/
   --border: rgb(127,127,127);
   --grayBorder: rgb(127,127,127);
+  --grayHover: rgb(35,35,35);
   
   --red: rgb(220,20,60);
   --redHover: rgb(220,20,60,0.20);
@@ -31,6 +32,7 @@ hr {width: 100%}
   --darkGreen: rgb(105,140,35);
   --blue: rgb(50,50,250);
   --purple: rgb(150,0,210);
+  --darkPurple: rgb(105,0,147);
   --purpleHover: rgb(150,0,210,0.20);
   --white: rgb(255,255,255);
   
@@ -197,6 +199,16 @@ hr {width: 100%}
   left: -7%;
   border-color: transparent var(--ttBg) transparent transparent;
 }
+.ttc.b::after {
+  bottom: 99%;
+  left: 50%;
+  border-color: transparent transparent var(--ttBg) transparent;
+}
+.ttc.l::after {
+  top: 20%;
+  right: -15%;
+  border-color: transparent transparent transparent var(--ttBg);
+}
 .tte:hover .ttc {
   visibility: visible;
   opacity: 1;
@@ -216,6 +228,7 @@ hr {width: 100%}
 /* Tab Content */
 .tabButton {
   background-color: var(--blackBg);
+  border: 3px solid var(--grayBorder);
   border-radius: 25px;
   height: 50px;
   min-width: 170px;
@@ -322,6 +335,17 @@ hr {width: 100%}
 #runMultiCon {
   /*border-top: 1px solid var(--border);*/
   flex-grow: 1;
+  display: flex;
+}
+#tokensMultiCon {
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
+}
+#energyMultiCon {
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
 }
 
 /*Shop*/
@@ -351,6 +375,8 @@ hr {width: 100%}
   border: 2px solid var(--purple);
   border-radius: 10px;
   position: relative;
+  cursor: pointer;
+  transition: background-color, .1s;
 }
 
 /*Altar*/
@@ -370,3 +396,44 @@ hr {width: 100%}
 }
 
 /*Rebirth*/
+/*rebirthMilestones*/
+.milestoneCell {
+  border: 2px solid var(--darkPurple);
+  border-radius: 10px;
+  margin-top: 10px;
+  width: 400px;
+  height: 70px;
+  position: relative;
+}
+/*rebirthUpgrades*/
+.respecButton {
+  border: 2px solid var(--red);
+  border-radius: 10px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  height: 70px;
+  width: 200px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color .1s;
+}
+.respecButton:hover {
+  background-color: var(--grayHover);
+}
+/*rebirthChallenges*/
+.challengeButton {
+  border: 2px solid var(--red);
+  border-radius: 25px;
+  height: 200px;
+  width: 200px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+/*.challengeButton:hover {
+  background-color: var(--grayHover);
+}*/
+.challengeDisplayId {
+  font-size: 150px;
+  color: rgb(220,20,60,0.50);
+}
